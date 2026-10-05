@@ -13,7 +13,7 @@ const url = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
 
 if (!url) {
   throw new Error(
-    "DIRECT_URL (atau DATABASE_URL) belum diisi. Salin .env.example menjadi .env lalu isi connection string Supabase/Postgres sebelum menjalankan drizzle-kit.",
+    "DIRECT_URL (atau DATABASE_URL) belum diisi. Salin .env.example menjadi .env lalu isi connection string Postgres (Neon/Supabase) sebelum menjalankan drizzle-kit.",
   );
 }
 

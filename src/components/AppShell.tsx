@@ -1,25 +1,13 @@
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
+import NextStepBar from "@/components/NextStepBar";
+import { STUDENT_STEPS } from "@/lib/steps";
 
 export type ShellSession =
   | { kind: "guest" }
   | { kind: "student"; name: string; groupName: string | null }
   | { kind: "teacher" };
 
-const STUDENT_NAV = [
-  { href: "/dashboard", label: "Beranda" },
-  { href: "/belajar/video", label: "1 · Cerita" },
-  { href: "/belajar/modul", label: "2 · Modul" },
-  { href: "/belajar/grafik", label: "3 · Lab Grafik" },
-  { href: "/belajar/kuis", label: "4 · Kuis" },
-  { href: "/proyek/perencanaan", label: "5 · Perencanaan" },
-  { href: "/proyek/wawancara", label: "6 · Wawancara" },
-  { href: "/proyek/pertidaksamaan", label: "7 · Pertidaksamaan" },
-  { href: "/proyek/grafik", label: "8 · Verifikasi" },
-  { href: "/proyek/jurnal", label: "9 · Jurnal" },
-  { href: "/akhir/produk", label: "10 · Produk" },
-  { href: "/akhir/refleksi", label: "11 · Refleksi" },
-];
 
 export default function AppShell({
   session,
@@ -65,13 +53,13 @@ export default function AppShell({
 
         {isStudent && (
           <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-2 text-xs">
-            {STUDENT_NAV.map((item) => (
+            {STUDENT_STEPS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className="shrink-0 rounded-lg border border-kitchen-800 px-2.5 py-1 whitespace-nowrap no-underline text-cream-300 transition hover:border-ember-500/60 hover:text-ember-300"
               >
-                {item.label}
+                {item.nav}
               </Link>
             ))}
           </nav>
@@ -80,10 +68,12 @@ export default function AppShell({
 
       <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
 
+      {isStudent && <NextStepBar />}
+
       <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-xs text-cream-400">
         <p>
           DapurSPtLDV — proyek PjBL Program Linear (SPtLDV) kelas X AKL. Data proyek disimpan di server
-          (Supabase Postgres) sehingga guru dapat memantau dari perangkat mana pun.
+          (Postgres/Neon) sehingga guru dapat memantau dari perangkat mana pun.
         </p>
       </footer>
     </div>

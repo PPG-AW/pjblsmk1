@@ -18,14 +18,21 @@ Maksimumnya?”*
 
 Dashboard guru: `/guru/dashboard`. Login siswa cukup nama lengkap di `/`.
 
+Setiap halaman siswa diakhiri **bilah pengarah langkah** (komponen `NextStepBar`, sumber urutan di
+`src/lib/steps.ts`) yang menampilkan “Langkah n dari 11”, apa yang harus dikerjakan di halaman itu, tombol
+**Lanjut** dan **← Kembali**. Tombol “Tandai selesai” juga langsung menampilkan tombol lanjut ke langkah
+berikutnya begitu tersimpan.
+
 ## Tumpukan teknologi
 
 - **Next.js 16** (App Router) + **React 19** + **Tailwind CSS 4**
-- **Supabase Postgres** diakses **hanya dari server** lewat **Drizzle ORM** (`drizzle-orm/postgres-js` + paket
-  `postgres`, opsi `prepare: false` untuk transaction pooler)
+- **Postgres terkelola: Neon** (rekomendasi) diakses **hanya dari server** lewat **Drizzle ORM**
+  (`drizzle-orm/postgres-js` + paket `postgres`, opsi `prepare: false` agar cocok dengan PgBouncer/pooler).
+  Supabase Postgres juga tetap bisa dipakai dengan string koneksi yang sama.
 - **Vercel** sebagai hosting (region `sin1`) + cron harian `/api/health`
-- **Vitest** untuk unit test parser, geometri clipping, model wawancara, kuis, dan pembagian kelompok
-- Tidak memakai `supabase-js` maupun anon key di klien
+- **Vitest** untuk unit test parser, geometri clipping, model wawancara, kuis, pembagian kelompok, urutan langkah,
+  pembersihan string koneksi, dan pengenalan galat koneksi
+- Tidak ada SDK penyedia database di klien (tanpa `supabase-js`, tanpa anon key, tanpa kunci yang terekspos)
 
 ## Setup lokal
 
@@ -71,27 +78,31 @@ npm run db:migrate  # jalankan migrasi (pakai DIRECT_URL)
 npm run db:studio   # Drizzle Studio
 ```
 
-## Setup Supabase
+## Setup database (Neon)
 
-1. Daftar di <https://supabase.com> → **New project**. Region **Southeast Asia (Singapore)**.
-2. Simpan **Database password**.
-3. **Project Settings → Database → Connection string**:
-   - **Transaction pooler (port 6543)** → isi ke `DATABASE_URL` (dipakai aplikasi saat berjalan).
-   - **Session pooler (port 5432)** → isi ke `DIRECT_URL` (dipakai `drizzle-kit` untuk migrasi, aman di IPv4).
-4. Jalankan migrasi dari komputermu:
+Neon dipakai karena **tidak ada tombol “Restore project”**: database yang menganggur hanya *tidur* dan **bangun
+otomatis** ketika ada permintaan (cold start biasanya di bawah 1 detik).
 
-```bash
-export DIRECT_URL="postgresql://postgres.<ref>:<password>@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
-npm run db:migrate
-```
+1. Daftar di <https://neon.tech> → **Create project**.
+   - Region: **AWS Asia Pacific (Singapore) — `aws-ap-southeast-1`** supaya dekat dengan region Vercel `sin1`.
+   - Database & role bawaan (`neondb`, `neondb_owner`) boleh dipakai apa adanya.
+2. Di console Neon → menu **SQL Editor** → tempel seluruh isi berkas **`database-setup.sql`** (ada di root repo
+   ini) → **Run**. Berkas itu membuat 17 tabel + indeks sekaligus. Jalankan sekali saja.
+   - Alternatif dari komputermu: `DIRECT_URL="…" npm run db:migrate` (memakai koneksi *direct*, bukan `-pooler`).
+3. Neon → tombol **Connect** → salin **dua** string:
+   - **Pooled connection** (nama host memuat `-pooler`) → `DATABASE_URL` (dipakai aplikasi).
+   - **Direct connection** (tanpa `-pooler`) → `DIRECT_URL` (dipakai `drizzle-kit` untuk migrasi).
+   - Keduanya wajib memuat `?sslmode=require`. Bila string Neon memuat `channel_binding=require`, biarkan saja —
+     aplikasi membuang parameter itu otomatis (`src/lib/db-url.ts`) karena postgres-js tidak memahaminya.
+4. Mengenai **RLS**: migrasi `0001_enable_rls.sql` mengaktifkan Row Level Security tanpa policy dan mencabut hak
+   akses role `anon`/`authenticated`. Di Neon perintah itu tidak berpengaruh (Neon tidak punya role tersebut dan
+   tidak menyediakan API PostgREST); dibiarkan sebagai pengaman kalau database kelak diekspos lewat Data API.
+   Aplikasi tetap normal karena terhubung sebagai pemilik tabel (`neondb_owner`).
 
-Migrasi otomatis mengaktifkan **Row Level Security pada semua tabel tanpa policy** dan mencabut hak akses role
-`anon`/`authenticated`. Aplikasi tetap berfungsi karena server terhubung sebagai role `postgres` (pemilik tabel),
-sementara akses langsung lewat API publik Supabase (PostgREST + anon key) tertutup.
-
-Catatan paket gratis: proyek Supabase dijeda otomatis setelah ±1 minggu tanpa aktivitas. `vercel.json` memuat
-cron harian ke `/api/health`, dan endpoint itu **melakukan `SELECT 1`** (syarat cron Vercel berjalan hanya dengan
-respons 200) serta membersihkan sesi kedaluwarsa.
+Catatan paket gratis Neon: compute **tidur setelah 5 menit menganggur** (tidak bisa dimatikan di paket gratis) dan
+bangun otomatis dalam ratusan milidetik saat ada kueri. Bila ingin permintaan pertama siswa selalu cepat, pasang
+pemantau gratis (mis. cron-job.org) yang memanggil `https://<domain>/api/health` setiap 5 menit pada jam sekolah.
+Cron harian Vercel di `vercel.json` tetap berguna sebagai pemantau harian.
 
 ## Setup Vercel
 
@@ -100,8 +111,8 @@ respons 200) serta membersihkan sesi kedaluwarsa.
 
 | Nama | Isi |
 |---|---|
-| `DATABASE_URL` | Transaction pooler Supabase (port 6543) |
-| `DIRECT_URL` | Session pooler Supabase (port 5432) |
+| `DATABASE_URL` | Pooled connection Neon (host memuat `-pooler`, `?sslmode=require`) |
+| `DIRECT_URL` | Direct connection Neon (tanpa `-pooler`, untuk `drizzle-kit`) |
 | `TEACHER_CODE` | kode guru rahasia (jangan pakai nilai contoh) |
 | `SESSION_SECRET` | string acak panjang (`openssl rand -hex 32`) |
 | `CRON_SECRET` | string acak untuk melindungi cron (`openssl rand -hex 32`) |
@@ -133,7 +144,10 @@ tabel `sessions` atau tunggu kedaluwarsa.
   `rel="noopener noreferrer"`.
 - **Header keamanan** lewat `next.config.ts`: `X-Content-Type-Options`, `Referrer-Policy`, dan `X-Frame-Options`
   (khusus deployment Vercel agar pratinjau lokal tetap bisa dibingkai).
-- **RLS aktif tanpa policy** + pencabutan hak akses `anon`/`authenticated`.
+- **RLS aktif tanpa policy** + pencabutan hak akses `anon`/`authenticated` (efektif bila database dipakai lewat
+  Supabase; di Neon perintahnya tidak berpengaruh dan hanya menjadi lapisan pengaman tambahan).
+- **String koneksi dibersihkan** sebelum dipakai (`src/lib/db-url.ts`): parameter khusus libpq seperti
+  `channel_binding=require` dibuang agar postgres-js tidak gagal dengan `unrecognized configuration parameter`.
 
 ## Pemetaan RPP → aplikasi
 
@@ -207,8 +221,64 @@ curl -s -o /dev/null -w "%{http_code}\n" -b cookie.txt localhost:3000/api/planni
 curl -s -H "Authorization: Bearer $CRON_SECRET" localhost:3000/api/health
 ```
 
-Di Lab Grafik, ketik `2x+3y<=120` → garis berlabel muncul; tambahkan `x>=0` dan `y>=0` → irisan DHP tergambar;
-`y < 40` → garis putus-putus.
+Di Lab Grafik, ketik `2x+3y<=120` → tulisan otomatis berubah menjadi `2x+3y≤120`, garis berlabel muncul; tambahkan
+`x>=0` dan `y>=0` → irisan DHP tergambar; `y < 40` → garis putus-putus.
+
+**Menuliskan simbol ≤ dan ≥:** siswa cukup mengetik `<=` dan `>=` pada papan tombol — di Lab Grafik dan di halaman
+Susun Pertidaksamaan, ketikan itu otomatis menjadi `≤`/`≥` sambil mempertahankan posisi kursor (fungsi
+`normalizeTypedInequality` + `caretAfterNormalize` di `src/lib/parser.ts`). Di Lab Grafik juga tersedia deretan
+tombol cepat `≤ ≥ < > =` yang menyisipkan simbol pada posisi kursor.
+
+## Pemecahan masalah (troubleshooting)
+
+### “Connection to client lost” / “Connection terminated unexpectedly”
+
+Pesan ini datang dari connection pooler di sisi penyedia database (PgBouncer Neon / Supavisor Supabase) yang
+memutus koneksi menganggur, bukan dari kode aplikasi. Yang sudah dilakukan aplikasi:
+
+- satu koneksi per instance serverless (`max: 1`) dengan `idle_timeout: 10` detik dan `max_lifetime: 15 menit`
+  sehingga soket tidak dipakai setelah mati;
+- pembungkus route (`src/lib/http.ts`) mengenali galat koneksi (`src/lib/db-error.ts`), membuang klien lama
+  (`resetDb()`), lalu **mengulang sekali permintaan baca (GET/HEAD)**. Permintaan tulis tidak diulang otomatis
+  supaya data tidak tersimpan dua kali — siswa diminta menekan tombol simpan sekali lagi;
+- pesan galat diterjemahkan ke bahasa Indonesia (503 + penjelasan), bukan “Terjadi kesalahan di server”.
+
+Bila masih sering: pastikan `DATABASE_URL` memakai string **pooled** dari panel Neon (nama host memuat `-pooler`;
+tanpa `-pooler` koneksi juga jalan tetapi boros koneksi), dan pastikan `sslmode=require` ada pada string.
+
+### Permintaan pertama terasa lambat (cold start Neon)
+
+Itu perilaku normal paket gratis Neon: compute **tidur setelah 5 menit** tanpa kueri dan bangun dalam ratusan
+milidetik saat ada permintaan. Tidak ada data yang hilang dan tidak ada tombol “restore” yang perlu ditekan.
+
+Bila ingin selalu hangat pada jam sekolah, pasang pemantau gratis (cron-job.org / UptimeRobot) yang memanggil
+`https://<domain>/api/health` **setiap 5 menit** (07.00–15.00 WIB). Tanpa itu pun aplikasi tetap berfungsi.
+
+### Muncul “unrecognized configuration parameter …”
+
+String koneksi memuat parameter yang hanya dipahami `psql`/libpq (mis. `channel_binding=require`). Aplikasi
+membuang parameter tersebut otomatis (`src/lib/db-url.ts`, diuji unit test). Bila pesan ini muncul lagi pada
+parameter lain, tambahkan namanya ke `ALLOWED_QUERY_PARAMS`/daftar buang di berkas itu — atau hapus parameter itu
+dari string di Vercel.
+
+### Halaman menampilkan “Sambungan ke database sedang bermasalah”
+
+Berarti database tidak terjangkau. Halaman itu (`src/app/error.tsx`) dan notice server-rendered di layout
+memberi tombol **Coba lagi**; `/api/health` menjawab `{"status":"degraded"}` (HTTP 503). Langkah pemeriksaan:
+
+1. Coba lagi setelah beberapa detik (kasus tersering: database baru bangun).
+2. Vercel → **Settings → Environment Variables**: pastikan `DATABASE_URL` memakai host **`-pooler`** dan
+   `DIRECT_URL` memakai host **tanpa `-pooler`**, keduanya berakhiran `?sslmode=require`. Bila string baru saja
+   diubah → **Redeploy**.
+3. Neon Console → pantau grafik **Compute**; bila kuota bulanan habis, compute nonaktif sampai awal periode
+   berikutnya (tidak ada data yang hilang).
+
+Cek status kapan saja:
+
+```bash
+curl -s https://<domain>/api/health                       # {"status":"ok"} atau 503 {"status":"degraded"}
+curl -s -H "Authorization: Bearer $CRON_SECRET" https://<domain>/api/health   # detail + latensi DB
+```
 
 ## Yang belum dikerjakan / catatan lanjutan
 

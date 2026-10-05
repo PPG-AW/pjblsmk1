@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  caretAfterNormalize,
   compareInequality,
   isParseFailure,
+  normalizeTypedInequality,
   parseInequality,
   trimNumber,
   type ParsedInequality,
@@ -133,5 +135,54 @@ describe("trimNumber", () => {
   it("memformat angka gaya Indonesia", () => {
     expect(trimNumber(6000)).toBe("6.000");
     expect(trimNumber(2.5)).toBe("2,5");
+  });
+});
+
+describe("bantuan pengetikan <= menjadi ≤", () => {
+  it("mengubah <= dan >= menjadi simbol ≤ ≥", () => {
+    expect(normalizeTypedInequality("2x+3y<=120")).toBe("2x+3y≤120");
+    expect(normalizeTypedInequality("x >= 0")).toBe("x ≥ 0");
+  });
+
+  it("menerima urutan terbalik =< dan =>", () => {
+    expect(normalizeTypedInequality("x =< 40")).toBe("x ≤ 40");
+    expect(normalizeTypedInequality("y => 2")).toBe("y ≥ 2");
+  });
+
+  it("membiarkan tanda tunggal < > dan teks tanpa tanda", () => {
+    expect(normalizeTypedInequality("y < 40")).toBe("y < 40");
+    expect(normalizeTypedInequality("y > 2x - 5")).toBe("y > 2x - 5");
+    expect(normalizeTypedInequality("100x + 150y")).toBe("100x + 150y");
+  });
+
+  it("mengganti beberapa tanda sekaligus", () => {
+    expect(normalizeTypedInequality("a<=b>=c<=d")).toBe("a≤b≥c≤d");
+  });
+
+  it("mempertahankan posisi kursor setelah penggantian", () => {
+    // "x<=0" dengan kursor di ujung (4) menjadi "x≤0" dengan kursor 3.
+    expect(caretAfterNormalize("x<=0", 4)).toBe(3);
+    // kursor tepat setelah tanda yang baru diganti
+    expect(caretAfterNormalize("x<=", 3)).toBe(2);
+    // kursor sebelum tanda tidak bergeser
+    expect(caretAfterNormalize("x<=0", 1)).toBe(1);
+    // tanpa penggantian, posisi tetap
+    expect(caretAfterNormalize("x < 40", 4)).toBe(4);
+    // beberapa penggantian sebelum kursor
+    expect(caretAfterNormalize("a<=b>=c", 7)).toBe(5);
+    // kursor di luar panjang teks tetap aman
+    expect(caretAfterNormalize("x<=0", 99)).toBe(3);
+  });
+
+  it("hasil normalisasi tetap bisa diparse", () => {
+    const normalized = normalizeTypedInequality("2x + 3y <= 120");
+    const parsed = parseInequality(normalized);
+    expect(isParseFailure(parsed)).toBe(false);
+    if (!isParseFailure(parsed)) {
+      expect(parsed.a).toBe(2);
+      expect(parsed.b).toBe(3);
+      expect(parsed.op).toBe("<=");
+      expect(parsed.c).toBe(120);
+    }
   });
 });

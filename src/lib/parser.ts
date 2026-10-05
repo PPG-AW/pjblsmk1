@@ -410,3 +410,38 @@ export function trimNumber(value: number): string {
   }
   return String(rounded).replace(".", ",");
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Bantuan pengetikan: <= otomatis menjadi ≤                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Ubah ketikan siswa menjadi simbol yang enak dibaca:
+ *   <=  dan  =<   ->  ≤
+ *   >=  dan  =>   ->  ≥
+ *
+ * Tanda tunggal < dan > tetap dibiarkan (memang berarti garis putus-putus),
+ * sehingga siswa cukup menulis seperti biasa tanpa perlu mencari simbol di
+ * papan tombol. Parser tetap menerima kedua bentuk, jadi fungsi ini murni
+ * kenyamanan pengetikan.
+ */
+export function normalizeTypedInequality(text: string): string {
+  return text
+    .replace(/<=/g, "≤")
+    .replace(/=</g, "≤")
+    .replace(/>=/g, "≥")
+    .replace(/=>/g, "≥");
+}
+
+/**
+ * Hitung posisi kursor setelah normalizeTypedInequality dipakai.
+ * Setiap penggantian dua karakter menjadi satu karakter menggeser kursor satu
+ * langkah ke kiri, sehingga kursor tidak melompat ke ujung teks.
+ */
+export function caretAfterNormalize(raw: string, caret: number): number {
+  const clamped = Math.max(0, Math.min(caret, raw.length));
+  const before = raw.slice(0, clamped);
+  const matches = before.match(/<=|=<|>=|=>/g);
+  const removed = matches ? matches.length : 0;
+  return Math.max(0, clamped - removed);
+}

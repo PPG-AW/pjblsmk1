@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api-client";
+import { caretAfterNormalize, normalizeTypedInequality } from "@/lib/parser";
 import type { InequalityCheckResult } from "@/lib/types";
 
 type RowHint = { key: string; label: string; kind: string };
@@ -46,6 +47,20 @@ export default function InequalityLab({
 
   function updateLine(index: number, value: string) {
     setLines((current) => current.map((line, i) => (i === index ? value : line)));
+  }
+
+  /** Ketikan <= langsung menjadi ≤ (dan >= menjadi ≥) seperti di Lab Grafik. */
+  function handleLineChange(index: number, input: HTMLInputElement) {
+    const raw = input.value;
+    const caret = input.selectionStart ?? raw.length;
+    const cleaned = normalizeTypedInequality(raw);
+    if (cleaned === raw) {
+      updateLine(index, raw);
+      return;
+    }
+    const nextCaret = caretAfterNormalize(raw, caret);
+    updateLine(index, cleaned);
+    requestAnimationFrame(() => input.setSelectionRange(nextCaret, nextCaret));
   }
 
   async function handleSubmit(event: React.FormEvent) {
@@ -104,9 +119,11 @@ export default function InequalityLab({
 
         <p className="muted">
           Tulis satu pertidaksamaan per baris (boleh tidak berurutan, boleh memakai spasi bebas). Contoh bentuk:{" "}
-          <span className="code-chip">100x + 150y &lt;= 6000</span>,{" "}
-          <span className="code-chip">x &gt;= 0</span>. Parser menerima ≤ ≥ &lt; &gt;, pemisah ribuan titik (6.000),
-          dan desimal koma.
+          <span className="code-chip">100x + 150y ≤ 6000</span>,{" "}
+          <span className="code-chip">x ≥ 0</span>. Cukup ketik <span className="code-chip">&lt;=</span> —
+          otomatis menjadi <span className="code-chip">≤</span> (juga <span className="code-chip">&gt;=</span>{" "}
+          menjadi <span className="code-chip">≥</span>). Parser juga menerima &lt; &gt;, pemisah ribuan titik
+          (6.000), dan desimal koma.
         </p>
 
         <ul className="space-y-2">
@@ -118,7 +135,7 @@ export default function InequalityLab({
                 <input
                   className="field flex-1 font-mono"
                   value={line}
-                  onChange={(event) => updateLine(index, event.target.value)}
+                  onChange={(event) => handleLineChange(index, event.currentTarget)}
                   placeholder={hint ? `untuk: ${hint.label}` : "pertidaksamaan lain (boleh dikosongkan)"}
                 />
                 <span className={hint ? "chip" : "chip chip-warn"}>{hint ? hint.label : "baris tambahan"}</span>

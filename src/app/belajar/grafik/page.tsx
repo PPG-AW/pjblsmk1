@@ -33,10 +33,25 @@ export default async function GraphExplorationPage() {
       <section className="card">
         <h2 className="section-title">Latihan terbimbing</h2>
         <ol className="prose-block mt-2 list-decimal ps-5">
-          <li>Ketik <span className="code-chip">100x + 150y &lt;= 6000</span>. Amati garis dan daerah yang diarsir.</li>
-          <li>Tambahkan <span className="code-chip">80x + 40y &lt;= 4000</span>. Perhatikan irisan kedua kendala.</li>
-          <li>Tambahkan <span className="code-chip">x &gt;= 0</span> dan <span className="code-chip">y &gt;= 0</span>.</li>
-          <li>Ubah satu tanda menjadi <span className="code-chip">&lt;</span> (misalnya y &lt; 40) dan lihat garis putus-putus.</li>
+          <li>
+            Ketik <span className="code-chip">100x + 150y &lt;= 6000</span> — begitu kamu menekan{" "}
+            <span className="code-chip">=</span>, tandanya otomatis menjadi{" "}
+            <span className="code-chip">≤</span>. Amati garis dan daerah yang diarsir.
+          </li>
+          <li>
+            Tambahkan <span className="code-chip">80x + 40y ≤ 4000</span>. Perhatikan irisan kedua kendala.
+          </li>
+          <li>
+            Tambahkan <span className="code-chip">x ≥ 0</span> dan <span className="code-chip">y ≥ 0</span>.
+          </li>
+          <li>
+            Ubah satu tanda menjadi <span className="code-chip">&lt;</span> (misalnya y &lt; 40) dan lihat garis
+            putus-putus.
+          </li>
+          <li>
+            Butuh simbol? Pakai tombol <span className="code-chip">≤</span>{" "}
+            <span className="code-chip">≥</span> di atas daftar baris — menyisipkan tepat di posisi kursor.
+          </li>
           <li>Coba tombol &ldquo;Sesuaikan otomatis&rdquo; lalu &ldquo;Atur ulang tampilan&rdquo;.</li>
         </ol>
         <p className="muted mt-2">{SAMPLE_DATA_LABEL}</p>

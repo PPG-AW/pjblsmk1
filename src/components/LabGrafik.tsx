@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api-client";
 import {
   boundaryLabelAnchor,
@@ -11,7 +12,15 @@ import {
   type HalfPlane,
   type Point,
 } from "@/lib/geometry";
-import { isParseFailure, parseInequality, trimNumber, type ParsedInequality } from "@/lib/parser";
+import {
+  caretAfterNormalize,
+  isParseFailure,
+  normalizeTypedInequality,
+  parseInequality,
+  trimNumber,
+  type ParsedInequality,
+} from "@/lib/parser";
+import { nextStepFor } from "@/lib/steps";
 
 export type LabRow = { id: string; text: string; visible: boolean; color: string };
 
@@ -142,6 +151,7 @@ export default function LabGrafik({
   alreadyDone?: boolean;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [rows, setRows] = useState<LabRow[]>(() => [newRow(0)]);
   const [bounds, setBounds] = useState<Bounds>(DEFAULT_BOUNDS);
   const [size, setSize] = useState({ width: 760, height: 470 });
@@ -152,6 +162,9 @@ export default function LabGrafik({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
   const pointers = useRef(new Map<number, { x: number; y: number }>());
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const lastCaret = useRef<Record<string, number>>({});
+  const [focusedRow, setFocusedRow] = useState<string | null>(null);
   const pinch = useRef<{ distance: number; bounds: Bounds; center: Point } | null>(null);
 
   /* ---------------------------------------------------------------- ukuran */
@@ -311,6 +324,44 @@ export default function LabGrafik({
     setRows((current) => current.map((row) => (row.id === id ? { ...row, ...patch } : row)));
   }
 
+  /**
+   * Siswa cukup mengetik <= dan langsung menjadi ≤ (juga >= menjadi ≥).
+   * Kursor dipertahankan di posisi yang benar supaya tidak melompat ke ujung.
+   */
+  function handleTextChange(id: string, input: HTMLInputElement) {
+    const raw = input.value;
+    const caret = input.selectionStart ?? raw.length;
+    const cleaned = normalizeTypedInequality(raw);
+    if (cleaned === raw) {
+      lastCaret.current[id] = caret;
+      updateRow(id, { text: raw });
+      return;
+    }
+    const nextCaret = caretAfterNormalize(raw, caret);
+    lastCaret.current[id] = nextCaret;
+    updateRow(id, { text: cleaned });
+    requestAnimationFrame(() => {
+      input.setSelectionRange(nextCaret, nextCaret);
+    });
+  }
+
+  /** Tombol cepat ≤ ≥ < > = menyisipkan simbol pada posisi kursor. */
+  function insertSymbol(symbol: string) {
+    const id = focusedRow ?? rows[rows.length - 1]?.id;
+    if (!id) return;
+    const row = rows.find((item) => item.id === id);
+    const input = inputRefs.current[id];
+    if (!row) return;
+    const start = input?.selectionStart ?? lastCaret.current[id] ?? row.text.length;
+    const end = input?.selectionEnd ?? start;
+    const text = row.text.slice(0, start) + symbol + row.text.slice(end);
+    const caret = start + symbol.length;
+    lastCaret.current[id] = caret;
+    updateRow(id, { text });
+    input?.focus();
+    requestAnimationFrame(() => input?.setSelectionRange(caret, caret));
+  }
+
   function addRow() {
     if (rows.length >= MAX_ROWS) {
       setNotice(`Maksimal ${MAX_ROWS} pertidaksamaan dalam satu grafik.`);
@@ -348,6 +399,8 @@ export default function LabGrafik({
       setMarking(false);
     }
   }
+
+  const nextStep = nextStepFor(pathname);
 
   /* ------------------------------------------------------------- geometri */
   const gridLines = useMemo(() => {
@@ -397,11 +450,34 @@ export default function LabGrafik({
             </div>
 
             <p className="muted mt-2">
-              Contoh yang bisa diketik: <span className="code-chip">2x + 3y &lt;= 120</span>,{" "}
-              <span className="code-chip">x &gt;= 0</span>, <span className="code-chip">y &lt; 40</span>,{" "}
+              Contoh yang bisa diketik: <span className="code-chip">2x + 3y ≤ 120</span>,{" "}
+              <span className="code-chip">x ≥ 0</span>, <span className="code-chip">y &lt; 40</span>,{" "}
               <span className="code-chip">y &gt; 2x - 5</span>. Tanda <strong>&lt;</strong> dan{" "}
               <strong>&gt;</strong> digambar sebagai garis putus-putus.
             </p>
+
+            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-kitchen-700/60 bg-kitchen-850/60 px-3 py-2">
+              <span className="font-mono text-[11px] tracking-wide text-cream-400 uppercase">
+                Ketik ≤ dengan tombol ini
+              </span>
+              {["≤", "≥", "<", ">", "="].map((symbol) => (
+                <button
+                  key={symbol}
+                  type="button"
+                  className="btn btn-small"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => insertSymbol(symbol)}
+                  aria-label={`Sisipkan tanda ${symbol}`}
+                >
+                  {symbol}
+                </button>
+              ))}
+              <span className="muted text-xs">
+                atau langsung ketik <span className="code-chip">&lt;=</span> pada papan tombol — otomatis menjadi{" "}
+                <span className="code-chip">≤</span> (begitu juga <span className="code-chip">&gt;=</span> menjadi{" "}
+                <span className="code-chip">≥</span>).
+              </span>
+            </div>
 
             {mode === "eksplorasi" && presets.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -429,10 +505,17 @@ export default function LabGrafik({
                       aria-hidden
                     />
                     <input
+                      ref={(element) => {
+                        inputRefs.current[item.row.id] = element;
+                      }}
                       className="field font-mono"
                       value={item.row.text}
-                      placeholder={index === 0 ? "2x + 3y <= 120" : "x >= 0"}
-                      onChange={(event) => updateRow(item.row.id, { text: event.target.value })}
+                      placeholder={index === 0 ? "2x + 3y ≤ 120" : "x ≥ 0"}
+                      onFocus={() => setFocusedRow(item.row.id)}
+                      onSelect={(event) => {
+                        lastCaret.current[item.row.id] = event.currentTarget.selectionStart ?? 0;
+                      }}
+                      onChange={(event) => handleTextChange(item.row.id, event.currentTarget)}
                       aria-label={`Pertidaksamaan baris ${index + 1}`}
                     />
                     <button
@@ -703,17 +786,31 @@ export default function LabGrafik({
           )}
 
           {doneItem && (
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={markDone}
-                disabled={marking || done || constraints.length === 0}
-              >
-                {done ? "Sudah ditandai selesai ✓" : marking ? "Menyimpan…" : "Tandai selesai"}
-              </button>
-              {constraints.length === 0 && (
-                <span className="muted">Tambahkan dan gambar minimal satu pertidaksamaan dulu.</span>
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={markDone}
+                  disabled={marking || done || constraints.length === 0}
+                >
+                  {done ? "Sudah ditandai selesai ✓" : marking ? "Menyimpan…" : "Tandai selesai"}
+                </button>
+                {constraints.length === 0 && (
+                  <span className="muted">Tambahkan dan gambar minimal satu pertidaksamaan dulu.</span>
+                )}
+              </div>
+              {done && nextStep && (
+                <div className="flex flex-wrap items-center gap-3 rounded-xl border border-herb-500/40 bg-herb-500/10 px-3 py-2">
+                  <span className="text-sm text-herb-300">
+                    {mode === "eksplorasi"
+                      ? "Lab Grafik eksplorasi selesai. Lanjutkan ke langkah berikutnya."
+                      : "Verifikasi grafik selesai. Lanjutkan ke langkah berikutnya."}
+                  </span>
+                  <Link className="btn btn-primary btn-small" href={nextStep.href}>
+                    Lanjut: {nextStep.short} →
+                  </Link>
+                </div>
               )}
             </div>
           )}

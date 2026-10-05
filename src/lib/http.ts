@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { resetDb } from "@/db";
+import { databaseFailure } from "@/lib/db-error";
 import { assertServerEnv, EnvError } from "@/lib/env";
 
 /** Error HTTP yang aman dikirim ke klien. */
@@ -58,6 +60,32 @@ export function route<Ctx = unknown>(handler: RouteHandler<Ctx>) {
           { status: 503 },
         );
       }
+
+      // Koneksi ke database bisa terputus sesaat (pooler menutup soket menganggur)
+      // atau endpoint/kompute sedang tidur. Buang klien lama; untuk permintaan baca coba
+      // sekali lagi dengan koneksi baru. Permintaan tulis tidak diulang otomatis
+      // supaya data tidak tersimpan dua kali.
+      const failure = databaseFailure(error);
+      if (failure) {
+        console.error("[api:db]", failure.kind, error);
+        resetDb();
+        const method = request.method.toUpperCase();
+        if (method === "GET" || method === "HEAD") {
+          try {
+            return await handler(request, context);
+          } catch (retryError) {
+            if (retryError instanceof HttpError) {
+              return NextResponse.json({ error: retryError.message }, { status: retryError.status });
+            }
+            console.error("[api:db:retry]", retryError);
+          }
+        }
+        return NextResponse.json(
+          { error: failure.message, database: "unreachable", reason: failure.kind },
+          { status: failure.status },
+        );
+      }
+
       console.error("[api]", error);
       return NextResponse.json(
         { error: "Terjadi kesalahan di server. Coba lagi sebentar lagi." },
