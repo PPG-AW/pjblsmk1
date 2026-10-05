@@ -84,7 +84,7 @@ export default function FinalProductForm({
       </div>
 
       <div>
-        <label className="field-label">Tautan Google Drive</label>
+        <label className="field-label">Tautan Google Drive produk akhir</label>
         <input
           className="field"
           value={link}
@@ -92,6 +92,10 @@ export default function FinalProductForm({
           placeholder="https://drive.google.com/..."
           required
         />
+        <p className="muted mt-1">
+          Unggah berkas produk akhir kelompokmu ke Google Drive, lalu tempel tautannya di sini. Halaman ini
+          satu-satunya tempat unggahan dalam proyek — dokumen pendukung lain tidak perlu diunggah.
+        </p>
         <p className="muted mt-1">{reminder}</p>
       </div>
 
@@ -135,7 +139,7 @@ export default function FinalProductForm({
             className="field min-h-[90px]"
             value={optimumText}
             onChange={(event) => setOptimumText(event.target.value)}
-            placeholder="titik pojok dan nilai Z, lalu rekomendasi: buat … unit A dan … unit B"
+            placeholder="titik pojok dan nilai Z, lalu rekomendasi: buat … pcs A dan … pcs B"
             required
           />
         </div>

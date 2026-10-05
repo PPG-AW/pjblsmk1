@@ -159,6 +159,12 @@ describe("bantuan pengetikan <= menjadi ≤", () => {
     expect(normalizeTypedInequality("a<=b>=c<=d")).toBe("a≤b≥c≤d");
   });
 
+  it("menerima tanda yang ditulis dengan spasi di tengah", () => {
+    expect(normalizeTypedInequality("x < = 40")).toBe("x ≤ 40");
+    expect(normalizeTypedInequality("y > = 2")).toBe("y ≥ 2");
+    expect(normalizeTypedInequality("x = < 40")).toBe("x ≤ 40");
+  });
+
   it("mempertahankan posisi kursor setelah penggantian", () => {
     // "x<=0" dengan kursor di ujung (4) menjadi "x≤0" dengan kursor 3.
     expect(caretAfterNormalize("x<=0", 4)).toBe(3);
@@ -170,6 +176,8 @@ describe("bantuan pengetikan <= menjadi ≤", () => {
     expect(caretAfterNormalize("x < 40", 4)).toBe(4);
     // beberapa penggantian sebelum kursor
     expect(caretAfterNormalize("a<=b>=c", 7)).toBe(5);
+    // dengan spasi di tengah tanda (tiga karakter menjadi satu)
+    expect(caretAfterNormalize("x < = 4", 7)).toBe(5);
     // kursor di luar panjang teks tetap aman
     expect(caretAfterNormalize("x<=0", 99)).toBe(3);
   });

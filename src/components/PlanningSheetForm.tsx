@@ -16,7 +16,6 @@ export type PlanningSheetData = {
   interviewQuestions: string[];
   schedule: { activity: string; place: string; date: string; person: string }[];
   finalProductType: string;
-  guideLink: string | null;
   ethicsAck: boolean;
   status: string;
   updatedAt: string | null;
@@ -71,7 +70,6 @@ export default function PlanningSheetForm({
       : [{ activity: "Wawancara pengurus D'Culinary", place: places[1] ?? "D'Culinary", date: "", person: "" }],
   );
   const [finalProductType, setFinalProductType] = useState(sheet.finalProductType);
-  const [guideLink, setGuideLink] = useState(sheet.guideLink ?? "");
   const [ethicsAck, setEthicsAck] = useState(sheet.ethicsAck);
   const [slotId, setSlotId] = useState<string>(selectedSlotId ? String(selectedSlotId) : "");
 
@@ -105,7 +103,6 @@ export default function PlanningSheetForm({
           interviewQuestions: questions.filter((item) => item.trim().length > 0),
           schedule: schedule.filter((row) => row.activity.trim().length > 0),
           finalProductType,
-          guideLink: guideLink.trim() === "" ? null : guideLink.trim(),
           ethicsAck,
           status: nextStatus,
           slotId: slotId === "" ? null : Number(slotId),
@@ -410,21 +407,7 @@ export default function PlanningSheetForm({
       </section>
 
       <section className="card space-y-3">
-        <h2 className="section-title">9 · Tautan pedoman wawancara (opsional)</h2>
-        <input
-          className="field"
-          value={guideLink}
-          onChange={(event) => setGuideLink(event.target.value)}
-          placeholder="https://docs.google.com/..."
-        />
-        <p className="muted">
-          Hanya tautan https dari Google Drive / Docs / YouTube yang diterima. Pastikan aksesnya &ldquo;siapa saja
-          yang memiliki tautan dapat melihat&rdquo;.
-        </p>
-      </section>
-
-      <section className="card space-y-3">
-        <h2 className="section-title">10 · Etika wawancara</h2>
+        <h2 className="section-title">9 · Etika wawancara</h2>
         <label className="flex items-start gap-3 text-sm">
           <input
             type="checkbox"

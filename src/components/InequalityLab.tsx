@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
+import SymbolKeypad from "@/components/SymbolKeypad";
 import { apiFetch } from "@/lib/api-client";
 import { caretAfterNormalize, normalizeTypedInequality } from "@/lib/parser";
 import type { InequalityCheckResult } from "@/lib/types";
@@ -44,9 +45,25 @@ export default function InequalityLab({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [focusedLine, setFocusedLine] = useState(0);
+  const lineRefs = useRef<Record<number, HTMLInputElement | null>>({});
 
   function updateLine(index: number, value: string) {
     setLines((current) => current.map((line, i) => (i === index ? value : line)));
+  }
+
+  /** Sisipkan tanda dari papan tombol ke baris yang sedang disorot (di posisi kursor). */
+  function insertSymbol(symbol: string) {
+    const index = focusedLine;
+    const input = lineRefs.current[index];
+    const current = lines[index] ?? "";
+    const start = input?.selectionStart ?? current.length;
+    const end = input?.selectionEnd ?? start;
+    const next = current.slice(0, start) + symbol + current.slice(end);
+    const caret = start + symbol.length;
+    setLines((rows) => rows.map((line, i) => (i === index ? next : line)));
+    input?.focus();
+    requestAnimationFrame(() => input?.setSelectionRange(caret, caret));
   }
 
   /** Ketikan <= langsung menjadi ≤ (dan >= menjadi ≥) seperti di Lab Grafik. */
@@ -126,6 +143,12 @@ export default function InequalityLab({
           (6.000), dan desimal koma.
         </p>
 
+        <SymbolKeypad
+          onInsert={insertSymbol}
+          compact
+          hint="Tombol menyisipkan tanda di baris yang sedang kamu isi (klik dulu kotak barisnya bila perlu). Mengetik <= atau >= juga otomatis menjadi ≤ / ≥."
+        />
+
         <ul className="space-y-2">
           {lines.map((line, index) => {
             const hint = rowHints[index];
@@ -133,8 +156,12 @@ export default function InequalityLab({
               <li key={index} className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-xs text-ember-400 w-6">{index + 1}.</span>
                 <input
+                  ref={(element) => {
+                    lineRefs.current[index] = element;
+                  }}
                   className="field flex-1 font-mono"
                   value={line}
+                  onFocus={() => setFocusedLine(index)}
                   onChange={(event) => handleLineChange(index, event.currentTarget)}
                   placeholder={hint ? `untuk: ${hint.label}` : "pertidaksamaan lain (boleh dikosongkan)"}
                 />

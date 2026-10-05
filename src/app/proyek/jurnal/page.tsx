@@ -2,15 +2,10 @@ import { redirect } from "next/navigation";
 import JournalForm, { type JournalEntry } from "@/components/JournalForm";
 import { getJournalEntries } from "@/db/queries";
 import { getSessionContext } from "@/lib/auth";
+import { todayJakarta } from "@/lib/date";
 import { JOURNAL_ACTIVITY_TYPES } from "@/lib/sptldv";
 
 export const dynamic = "force-dynamic";
-
-function todayIso(): string {
-  const now = new Date();
-  const offset = now.getTimezoneOffset() * 60_000;
-  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
-}
 
 export default async function JournalPage() {
   const session = await getSessionContext();
@@ -28,7 +23,6 @@ export default async function JournalPage() {
     activity: entry.activity,
     obstacle: entry.obstacle,
     contribution: entry.contribution,
-    docLink: entry.docLink,
     isMine: entry.studentId === session.student.id,
     updatedAt: entry.updatedAt instanceof Date ? entry.updatedAt.toISOString() : String(entry.updatedAt),
   }));
@@ -52,7 +46,7 @@ export default async function JournalPage() {
         </p>
       </section>
 
-      <JournalForm entries={entries} activityTypes={JOURNAL_ACTIVITY_TYPES} today={todayIso()} />
+      <JournalForm entries={entries} activityTypes={JOURNAL_ACTIVITY_TYPES} today={todayJakarta()} />
     </div>
   );
 }

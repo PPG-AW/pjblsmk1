@@ -4,7 +4,6 @@ import { getDb } from "@/db";
 import { journals } from "@/db/schema";
 import { requireGroupMember } from "@/lib/auth";
 import { badRequest, notFound, readJson, route } from "@/lib/http";
-import { normalizeExternalLink } from "@/lib/links";
 import { JOURNAL_ACTIVITY_TYPES } from "@/lib/sptldv";
 import { asString, oneOf } from "@/lib/validation";
 
@@ -48,7 +47,6 @@ export const PATCH = route<Context>(async (request, context) => {
       activity: asString(body.activity ?? entry.activity, "Kegiatan", { min: 3, max: 600 }),
       obstacle: asString(body.obstacle ?? entry.obstacle, "Kendala", { max: 600, required: false }),
       contribution: asString(body.contribution ?? entry.contribution, "Kontribusi saya", { min: 10, max: 1200 }),
-      docLink: normalizeExternalLink(body.docLink ?? entry.docLink),
       updatedAt: new Date(),
     })
     .where(eq(journals.id, id));

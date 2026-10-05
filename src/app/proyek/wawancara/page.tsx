@@ -38,7 +38,7 @@ export default async function InterviewPage() {
         <h1 className="mt-1 font-display text-2xl text-cream-100">Form Wawancara D&apos;Culinary</h1>
         <p className="mt-2 max-w-3xl text-sm text-cream-200">
           Catat data hasil wawancara/observasi kelompokmu: minimal 2 bahan pokok, stok, harga jual satuan, dan biaya
-          produksi per unit. Waktu produksi tidak lagi dicatat.
+          produksi per pcs.
         </p>
         <p className="note mt-3">{NO_FABRICATION_RULE}</p>
       </section>
@@ -91,7 +91,6 @@ export default async function InterviewPage() {
         costA={interview?.costA ?? null}
         costB={interview?.costB ?? null}
         moneyStatus={interview?.moneyStatus ?? null}
-        photoLink={interview?.photoLink ?? null}
         limitations={interview?.limitations ?? ""}
         checklist={MINIMAL_DATA_CHECKLIST}
         hasConstraints={readiness.constraintReady}

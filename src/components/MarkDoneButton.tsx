@@ -13,7 +13,7 @@ export default function MarkDoneButton({
   nextHref,
   nextLabel,
 }: {
-  item: "video" | "modul" | "grafik" | "grafik_verifikasi";
+  item: "cerita" | "modul" | "grafik" | "grafik_verifikasi";
   alreadyDone: boolean;
   label?: string;
   /** Bila tidak diisi, diambil otomatis dari urutan langkah siswa. */
@@ -45,29 +45,30 @@ export default function MarkDoneButton({
   }
 
   return (
-    <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-3">
+    <div className="space-y-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button type="button" className="btn btn-primary" onClick={handleClick} disabled={busy || done}>
           {done ? "Sudah ditandai selesai ✓" : busy ? "Menyimpan…" : label}
         </button>
+
+        {/* Tombol lanjut muncul di samping begitu langkah ditandai selesai. */}
+        {done && target && (
+          <Link className="btn btn-primary" href={target}>
+            Lanjut: {targetLabel} →
+          </Link>
+        )}
+
         {error && <span className="chip chip-bad">{error}</span>}
-        {done && !target && <span className="chip chip-ok">Langkah ini tuntas ✓</span>}
+        {done && !target && <span className="chip chip-ok">Langkah terakhir selesai ✓</span>}
       </div>
 
       {done && target && (
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-herb-500/40 bg-herb-500/10 px-3 py-2">
-          <span className="text-sm text-herb-300">
-            Tersimpan. Kamu dapat melanjutkan ke langkah berikutnya.
-          </span>
-          <Link className="btn btn-primary btn-small" href={target}>
-            Lanjut: {targetLabel} →
-          </Link>
-        </div>
+        <p className="muted">Tersimpan. Silakan lanjut ke langkah berikutnya lewat tombol di atas.</p>
       )}
-
       {!done && target && (
         <p className="muted">
-          Setelah semua selesai, tekan tombol di atas lalu lanjut ke <strong>{targetLabel}</strong>.
+          Setelah semua selesai, tekan tombol di atas — tombol <strong>Lanjut: {targetLabel}</strong> akan muncul di
+          sampingnya.
         </p>
       )}
     </div>

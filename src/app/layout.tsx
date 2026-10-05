@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
 import AppShell, { type ShellSession } from "@/components/AppShell";
 import { getSessionContext } from "@/lib/auth";
+import { getJournalTickInfo } from "@/db/queries";
 import { isConnectionError } from "@/lib/db-error";
 import "./globals.css";
 
@@ -67,7 +68,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     const context = await getSessionContext();
     if (context?.kind === "teacher") session = { kind: "teacher" };
     else if (context?.kind === "student") {
-      session = { kind: "student", name: context.student.name, groupName: context.group?.name ?? null };
+      // Pengingat jurnal harian hanya bermakna setelah siswa masuk fase proyek
+      // (sudah tergabung di kelompok).
+      const ticker = context.group ? await getJournalTickInfo(context.student.id) : null;
+      session = {
+        kind: "student",
+        name: context.student.name,
+        groupName: context.group?.name ?? null,
+        ticker,
+      };
     }
   } catch (error) {
     // Kredensial/env belum siap: tampilkan halaman sebagai tamu, tanpa crash.

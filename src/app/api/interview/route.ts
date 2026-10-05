@@ -4,7 +4,6 @@ import { getInterview, getPlanningSheet } from "@/db/queries";
 import { interviews } from "@/db/schema";
 import { requireGroupMember } from "@/lib/auth";
 import { badRequest, readJson, route } from "@/lib/http";
-import { normalizeExternalLink } from "@/lib/links";
 import { interviewReadiness, objectiveExpression, profitPerUnit, type InterviewData } from "@/lib/model";
 import { MINIMAL_DATA_CHECKLIST } from "@/lib/sptldv";
 import type { DataStatus, Ingredient, MoneyData } from "@/lib/types";
@@ -58,7 +57,6 @@ export const GET = route(async () => {
           costA: interview.costA,
           costB: interview.costB,
           moneyStatus: interview.moneyStatus,
-          photoLink: interview.photoLink,
           limitations: interview.limitations,
           updatedAt: interview.updatedAt,
         }
@@ -102,8 +100,8 @@ export const PUT = route(async (request) => {
       return {
         name: asString(record.name, `Nama ${label.toLowerCase()}`, { max: 80 }),
         unit: asString(record.unit, `Satuan ${label.toLowerCase()}`, { max: 20 }),
-        perA: asNumber(record.perA, `Kebutuhan per 1 unit produk A (${label})`, { min: 0, max: 1e9 }),
-        perB: asNumber(record.perB, `Kebutuhan per 1 unit produk B (${label})`, { min: 0, max: 1e9 }),
+        perA: asNumber(record.perA, `Kebutuhan per 1 pcs produk A (${label})`, { min: 0, max: 1e9 }),
+        perB: asNumber(record.perB, `Kebutuhan per 1 pcs produk B (${label})`, { min: 0, max: 1e9 }),
         total: asNumber(record.total, `Stok/total (${label})`, { min: 0, max: 1e9 }),
         status,
         followUp,
@@ -113,8 +111,8 @@ export const PUT = route(async (request) => {
 
   const priceA = asNumber(body.priceA, "Harga jual satuan produk A", { min: 0, max: 1e9, integer: true });
   const priceB = asNumber(body.priceB, "Harga jual satuan produk B", { min: 0, max: 1e9, integer: true });
-  const costA = asNumber(body.costA, "Biaya produksi per unit produk A", { min: 0, max: 1e9, integer: true });
-  const costB = asNumber(body.costB, "Biaya produksi per unit produk B", { min: 0, max: 1e9, integer: true });
+  const costA = asNumber(body.costA, "Biaya produksi per 1 pcs produk A", { min: 0, max: 1e9, integer: true });
+  const costB = asNumber(body.costB, "Biaya produksi per 1 pcs produk B", { min: 0, max: 1e9, integer: true });
 
   const moneyStatus: MoneyData = {
     priceA: parseStatus((body.moneyStatus as Record<string, unknown> | undefined)?.priceA, "Status harga jual A"),
@@ -127,7 +125,6 @@ export const PUT = route(async (request) => {
     }),
   };
 
-  const photoLink = normalizeExternalLink(body.photoLink ?? null);
   const limitations = asString(body.limitations ?? "", "Catatan keterbatasan data/asumsi", {
     max: 1500,
     required: false,
@@ -150,10 +147,10 @@ export const PUT = route(async (request) => {
     }
   }
   if (priceA <= costA) {
-    warnings.push("Harga jual produk A tidak lebih besar dari biaya produksinya, sehingga keuntungan per unit tidak positif.");
+    warnings.push("Harga jual produk A tidak lebih besar dari biaya produksinya, sehingga keuntungan per pcs tidak positif.");
   }
   if (priceB <= costB) {
-    warnings.push("Harga jual produk B tidak lebih besar dari biaya produksinya, sehingga keuntungan per unit tidak positif.");
+    warnings.push("Harga jual produk B tidak lebih besar dari biaya produksinya, sehingga keuntungan per pcs tidak positif.");
   }
 
   const db = getDb();
@@ -167,7 +164,6 @@ export const PUT = route(async (request) => {
     costA,
     costB,
     moneyStatus,
-    photoLink,
     limitations,
     updatedBy: context.student.id,
     updatedAt: new Date(),

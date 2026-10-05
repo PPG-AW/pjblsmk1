@@ -101,7 +101,7 @@ export const groupMembers = pgTable(
 /* Progres & kuis                                                             */
 /* -------------------------------------------------------------------------- */
 
-/** item: 'video' | 'modul' | 'grafik' | 'grafik_verifikasi' */
+/** item: 'cerita' | 'modul' | 'grafik' | 'grafik_verifikasi' */
 export const progress = pgTable(
   "progress",
   {

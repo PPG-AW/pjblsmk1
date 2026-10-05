@@ -36,16 +36,16 @@ export default async function ModulePage() {
         <div className="prose-block">
           <p>
             <strong>1) Tentukan variabel.</strong> Misalkan x = banyaknya produk A yang dibuat dan y = banyaknya
-            produk B yang dibuat (dalam satuan porsi/unit).
+            produk B yang dibuat (dalam satuan pcs).
           </p>
           <p>
             <strong>2) Susun kendala.</strong> Setiap keterbatasan (stok bahan, kapasitas, permintaan) menjadi satu
-            pertidaksamaan linear dua variabel. Untuk bahan: (kebutuhan per unit A)·x + (kebutuhan per unit B)·y ≤
+            pertidaksamaan linear dua variabel. Untuk bahan: (kebutuhan per pcs A)·x + (kebutuhan per pcs B)·y ≤
             stok yang tersedia. Tambahkan syarat x ≥ 0 dan y ≥ 0 karena banyak produk tidak mungkin negatif.
           </p>
           <p>
-            <strong>3) Tentukan fungsi tujuan.</strong> Keuntungan per unit = harga jual satuan − biaya produksi per
-            unit. Fungsi tujuan: Z = (untung per unit A)·x + (untung per unit B)·y yang akan dimaksimumkan.
+            <strong>3) Tentukan fungsi tujuan.</strong> Keuntungan per pcs = harga jual 1 pcs − biaya produksi 1 pcs.
+            Fungsi tujuan: Z = (untung per pcs A)·x + (untung per pcs B)·y yang akan dimaksimumkan.
           </p>
         </div>
 
@@ -56,11 +56,11 @@ export default async function ModulePage() {
               <thead>
                 <tr>
                   <th>Produk</th>
-                  <th>Beras (gram/unit)</th>
-                  <th>Ayam (gram/unit)</th>
+                  <th>Beras (gram/pcs)</th>
+                  <th>Ayam (gram/pcs)</th>
                   <th>Harga jual</th>
                   <th>Biaya produksi</th>
-                  <th>Keuntungan/unit</th>
+                  <th>Keuntungan/pcs</th>
                 </tr>
               </thead>
               <tbody>

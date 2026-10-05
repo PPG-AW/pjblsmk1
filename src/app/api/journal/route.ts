@@ -3,16 +3,10 @@ import { getDb } from "@/db";
 import { getJournalEntries } from "@/db/queries";
 import { journals } from "@/db/schema";
 import { requireGroupMember } from "@/lib/auth";
+import { todayJakarta } from "@/lib/date";
 import { badRequest, readJson, route } from "@/lib/http";
-import { normalizeExternalLink } from "@/lib/links";
 import { JOURNAL_ACTIVITY_TYPES } from "@/lib/sptldv";
 import { asString, oneOf } from "@/lib/validation";
-
-function todayIso(): string {
-  const now = new Date();
-  const offset = now.getTimezoneOffset() * 60_000;
-  return new Date(now.getTime() - offset).toISOString().slice(0, 10);
-}
 
 /** GET /api/journal — entri jurnal seluruh anggota kelompok. */
 export const GET = route(async () => {
@@ -25,7 +19,7 @@ export const GET = route(async () => {
       updatedAt: entry.updatedAt instanceof Date ? entry.updatedAt.toISOString() : entry.updatedAt,
     })),
     activityTypes: JOURNAL_ACTIVITY_TYPES,
-    today: todayIso(),
+    today: todayJakarta(),
   });
 });
 
@@ -34,11 +28,11 @@ export const POST = route(async (request) => {
   const context = await requireGroupMember();
   const body = await readJson(request);
 
-  const entryDate = asString(body.entryDate ?? todayIso(), "Tanggal", { max: 10 });
+  const entryDate = asString(body.entryDate ?? todayJakarta(), "Tanggal", { max: 10 });
   if (!/^\d{4}-\d{2}-\d{2}$/.test(entryDate)) {
     throw badRequest("Tanggal harus berformat YYYY-MM-DD.");
   }
-  if (entryDate > todayIso()) {
+  if (entryDate > todayJakarta()) {
     throw badRequest("Tanggal tidak boleh di masa depan.");
   }
 
@@ -46,7 +40,6 @@ export const POST = route(async (request) => {
   const activity = asString(body.activity, "Kegiatan", { min: 3, max: 600 });
   const obstacle = asString(body.obstacle ?? "", "Kendala", { max: 600, required: false });
   const contribution = asString(body.contribution, "Kontribusi saya", { min: 10, max: 1200 });
-  const docLink = normalizeExternalLink(body.docLink ?? null);
 
   const db = getDb();
   const inserted = await db
@@ -59,7 +52,6 @@ export const POST = route(async (request) => {
       activity,
       obstacle,
       contribution,
-      docLink,
     })
     .returning({ id: journals.id });
 

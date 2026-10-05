@@ -49,7 +49,7 @@ type GroupOverview = {
 };
 
 type Overview = {
-  settings: { quizScoreMode: "pertama" | "tertinggi"; currentStage: number; restrictRoster: boolean; youtubeUrl: string };
+  settings: { quizScoreMode: "pertama" | "tertinggi"; currentStage: number; restrictRoster: boolean };
   groups: GroupOverview[];
   ungrouped: { studentId: number; name: string; quizScore: number | null; quizAttempts: number; hasActivity: boolean }[];
   slots: { id: number; label: string; date: string; groupId: number | null; groupName: string | null }[];
@@ -201,7 +201,6 @@ export default function TeacherDashboard({ initialOverview }: { initialOverview:
           quizScoreMode: patch.quizScoreMode ?? overview.settings.quizScoreMode,
           currentStage: patch.currentStage ?? overview.settings.currentStage,
           restrictRoster: patch.restrictRoster ?? overview.settings.restrictRoster,
-          youtubeUrl: patch.youtubeUrl ?? overview.settings.youtubeUrl,
         },
       });
       setNotice(payload.message);
@@ -287,22 +286,6 @@ export default function TeacherDashboard({ initialOverview }: { initialOverview:
               />
               Hanya nama dalam daftar kelas
             </label>
-          </div>
-        </div>
-
-        <div>
-          <label className="field-label">Tautan video cerita masalah (YouTube)</label>
-          <div className="flex flex-wrap gap-2">
-            <input
-              className="field flex-1"
-              defaultValue={overview.settings.youtubeUrl}
-              placeholder="https://www.youtube.com/watch?v=..."
-              onBlur={(event) => {
-                if (event.target.value !== overview.settings.youtubeUrl) {
-                  void saveSettings({ youtubeUrl: event.target.value });
-                }
-              }}
-            />
           </div>
         </div>
 

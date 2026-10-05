@@ -15,7 +15,6 @@ type Props = {
   costA: number | null;
   costB: number | null;
   moneyStatus: MoneyData | null;
-  photoLink: string | null;
   limitations: string;
   checklist: string[];
   hasConstraints: boolean;
@@ -66,8 +65,11 @@ export default function InterviewForm(props: Props) {
       followUp: "",
     },
   );
-  const [photoLink, setPhotoLink] = useState(props.photoLink ?? "");
   const [limitations, setLimitations] = useState(props.limitations);
+
+  // Nama produk mengikuti apa yang diketik di bagian atas, mis. "Per 1 pcs Roti".
+  const labelA = productA.trim() === "" ? "Produk A" : productA.trim();
+  const labelB = productB.trim() === "" ? "Produk B" : productB.trim();
 
   const [message, setMessage] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
@@ -124,7 +126,6 @@ export default function InterviewForm(props: Props) {
             costA: Number(costA) || 0,
             costB: Number(costB) || 0,
             moneyStatus,
-            photoLink: photoLink.trim() === "" ? null : photoLink.trim(),
             limitations,
           },
         },
@@ -211,7 +212,7 @@ export default function InterviewForm(props: Props) {
                   />
                 </div>
                 <div>
-                  <label className="field-label">Per 1 unit A</label>
+                  <label className="field-label">Per 1 pcs {labelA}</label>
                   <input
                     type="number"
                     min={0}
@@ -223,7 +224,7 @@ export default function InterviewForm(props: Props) {
                   />
                 </div>
                 <div>
-                  <label className="field-label">Per 1 unit B</label>
+                  <label className="field-label">Per 1 pcs {labelB}</label>
                   <input
                     type="number"
                     min={0}
@@ -286,7 +287,7 @@ export default function InterviewForm(props: Props) {
         <h2 className="section-title">Harga jual dan biaya produksi (fungsi tujuan)</h2>
         <div className="grid gap-3 md:grid-cols-4">
           <div>
-            <label className="field-label">Harga jual A (Rp)</label>
+            <label className="field-label">Harga jual 1 pcs {labelA} (Rp)</label>
             <input
               type="number"
               min={0}
@@ -309,7 +310,7 @@ export default function InterviewForm(props: Props) {
             </select>
           </div>
           <div>
-            <label className="field-label">Biaya produksi A (Rp)</label>
+            <label className="field-label">Biaya produksi 1 pcs {labelA} (Rp)</label>
             <input
               type="number"
               min={0}
@@ -332,7 +333,7 @@ export default function InterviewForm(props: Props) {
             </select>
           </div>
           <div>
-            <label className="field-label">Harga jual B (Rp)</label>
+            <label className="field-label">Harga jual 1 pcs {labelB} (Rp)</label>
             <input
               type="number"
               min={0}
@@ -355,7 +356,7 @@ export default function InterviewForm(props: Props) {
             </select>
           </div>
           <div>
-            <label className="field-label">Biaya produksi B (Rp)</label>
+            <label className="field-label">Biaya produksi 1 pcs {labelB} (Rp)</label>
             <input
               type="number"
               min={0}
@@ -391,11 +392,11 @@ export default function InterviewForm(props: Props) {
 
         <div className="grid gap-2 md:grid-cols-3">
           <div className="card-tight">
-            <p className="muted">Keuntungan per unit A</p>
+            <p className="muted">Keuntungan per 1 pcs {labelA}</p>
             <p className="font-mono text-lg text-ember-300">{rupiah(profitA)}</p>
           </div>
           <div className="card-tight">
-            <p className="muted">Keuntungan per unit B</p>
+            <p className="muted">Keuntungan per 1 pcs {labelB}</p>
             <p className="font-mono text-lg text-ember-300">{rupiah(profitB)}</p>
           </div>
           <div className="card-tight">
@@ -408,21 +409,13 @@ export default function InterviewForm(props: Props) {
           </div>
         </div>
         <p className="muted">
-          Keuntungan per unit = harga jual satuan − biaya produksi per unit. Ini menjadi koefisien fungsi tujuan Z.
+          Keuntungan per 1 pcs = harga jual 1 pcs − biaya produksi 1 pcs. Angka ini menjadi koefisien fungsi
+          tujuan Z, dengan x menyatakan banyak {labelA} dan y menyatakan banyak {labelB} (dalam pcs).
         </p>
       </section>
 
       <section className="card space-y-3">
-        <h2 className="section-title">Bukti & keterbatasan</h2>
-        <div>
-          <label className="field-label">Tautan foto LKPD berparaf narasumber (opsional)</label>
-          <input
-            className="field"
-            value={photoLink}
-            onChange={(event) => setPhotoLink(event.target.value)}
-            placeholder="https://drive.google.com/..."
-          />
-        </div>
+        <h2 className="section-title">Keterbatasan & data minimal</h2>
         <div>
           <label className="field-label">Catatan keterbatasan data / asumsi yang disepakati dengan guru</label>
           <textarea

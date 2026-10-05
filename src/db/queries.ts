@@ -4,7 +4,7 @@
  * Prinsip: pakai agregasi SQL (GROUP BY / COUNT / jsonb_array_elements), bukan
  * menarik seluruh tabel lalu menyaring di JavaScript.
  */
-import { asc, desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
 import { getDb, getSql } from "@/db";
 import {
   classRoster,
@@ -21,6 +21,7 @@ import {
   reminders,
   students,
 } from "@/db/schema";
+import { todayJakarta } from "@/lib/date";
 import { getSettings, quizScoreFor, type AppSettings } from "@/lib/settings";
 import type { GroupStatus } from "@/lib/types";
 
@@ -427,7 +428,6 @@ export async function getJournalEntries(groupId: number) {
       activity: journals.activity,
       obstacle: journals.obstacle,
       contribution: journals.contribution,
-      docLink: journals.docLink,
       updatedAt: journals.updatedAt,
     })
     .from(journals)
@@ -467,6 +467,32 @@ export async function getQuizHistory(studentId: number, limit = 5) {
     .where(eq(quizAttempts.studentId, studentId))
     .orderBy(desc(quizAttempts.attemptNo))
     .limit(limit);
+}
+
+/**
+ * Info untuk notice berjalan di header siswa: apakah jurnal hari ini sudah diisi,
+ * dan pesan pengingat terakhir dari guru (bila ada).
+ */
+export async function getJournalTickInfo(studentId: number) {
+  const db = getDb();
+  const today = todayJakarta();
+  const [todayEntries, activeReminders] = await Promise.all([
+    db
+      .select({ id: journals.id })
+      .from(journals)
+      .where(and(eq(journals.studentId, studentId), eq(journals.entryDate, today)))
+      .limit(1),
+    db
+      .select({ message: reminders.message })
+      .from(reminders)
+      .where(eq(reminders.active, true))
+      .orderBy(desc(reminders.createdAt))
+      .limit(1),
+  ]);
+  return {
+    hasJournalToday: todayEntries.length > 0,
+    reminder: activeReminders[0]?.message ?? null,
+  };
 }
 
 export async function getActiveReminders() {

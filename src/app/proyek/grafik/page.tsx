@@ -40,7 +40,10 @@ export default async function VerificationGraphPage() {
       costA: interview.costA,
       costB: interview.costB,
     };
-    rows.push({ label: "Keuntungan/unit A / B", value: `${formatRupiah(profitPerUnit(data, "A"))} / ${formatRupiah(profitPerUnit(data, "B"))}` });
+    rows.push({
+      label: `Keuntungan/pcs ${data.productA || "A"} / ${data.productB || "B"}`,
+      value: `${formatRupiah(profitPerUnit(data, "A"))} / ${formatRupiah(profitPerUnit(data, "B"))}`,
+    });
   }
 
   return (

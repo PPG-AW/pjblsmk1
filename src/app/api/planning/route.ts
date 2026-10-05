@@ -5,7 +5,6 @@ import { getGroupStudents, getInterviewSlotsWithGroups, getPlanningSheet } from 
 import { interviewSlots, planningSheets } from "@/db/schema";
 import { requireGroupMember } from "@/lib/auth";
 import { badRequest, conflict, readJson, route } from "@/lib/http";
-import { normalizeExternalLink } from "@/lib/links";
 import { DRIVING_QUESTION_PLACEHOLDER } from "@/lib/planning";
 import {
   FINAL_PRODUCT_TYPES,
@@ -25,7 +24,6 @@ function defaultSheet(groupId: number, members: { id: number }[]): {
   interviewQuestions: string[];
   schedule: ScheduleRow[];
   finalProductType: string;
-  guideLink: string | null;
   ethicsAck: boolean;
   status: string;
   teacherNote: string | null;
@@ -43,7 +41,6 @@ function defaultSheet(groupId: number, members: { id: number }[]): {
     interviewQuestions: [],
     schedule: [],
     finalProductType: "",
-    guideLink: null,
     ethicsAck: false,
     status: "draft",
     teacherNote: null,
@@ -74,7 +71,6 @@ export const GET = route(async () => {
         interviewQuestions: sheet.interviewQuestions,
         schedule: sheet.schedule,
         finalProductType: sheet.finalProductType,
-        guideLink: sheet.guideLink,
         ethicsAck: sheet.ethicsAck,
         status: sheet.status,
         teacherNote: sheet.teacherNote,
@@ -170,7 +166,6 @@ export const PUT = route(async (request) => {
     throw badRequest("Bentuk produk akhir tidak dikenali.");
   }
 
-  const guideLink = normalizeExternalLink(body.guideLink ?? null);
   const ethicsAck = asBoolean(body.ethicsAck ?? false, "Persetujuan etika wawancara");
   const status = oneOf(body.status ?? "draft", "Status", ["draft", "final"] as const, "Status lembar");
   const slotId = optionalNumber(body.slotId, "Slot wawancara", { min: 1, integer: true, required: false });
@@ -225,7 +220,6 @@ export const PUT = route(async (request) => {
     interviewQuestions,
     schedule,
     finalProductType,
-    guideLink,
     ethicsAck,
     status,
     updatedBy: context.student.id,

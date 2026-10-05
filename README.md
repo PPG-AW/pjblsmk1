@@ -9,7 +9,7 @@ Maksimumnya?”*
 
 | Fase PjBL | Halaman siswa |
 |---|---|
-| Pertanyaan mendasar | `/belajar/video` (cerita D'Culinary + video + pertanyaan pemantik) |
+| Pertanyaan mendasar | `/belajar/cerita` (cerita D'Culinary tiga babak + foto produk + pertanyaan pemantik) |
 | Memahami materi | `/belajar/modul`, `/belajar/grafik` (Lab Grafik eksplorasi), `/belajar/kuis` |
 | Desain perencanaan & jadwal | `/proyek/perencanaan` (Project Planning Sheet) |
 | Monitoring | `/proyek/wawancara`, `/proyek/pertidaksamaan`, `/proyek/grafik` (verifikasi), `/proyek/jurnal` |
@@ -31,7 +31,7 @@ berikutnya begitu tersimpan.
   Supabase Postgres juga tetap bisa dipakai dengan string koneksi yang sama.
 - **Vercel** sebagai hosting (region `sin1`) + cron harian `/api/health`
 - **Vitest** untuk unit test parser, geometri clipping, model wawancara, kuis, pembagian kelompok, urutan langkah,
-  pembersihan string koneksi, dan pengenalan galat koneksi
+  tanggal zona Jakarta, pembersihan string koneksi, dan pengenalan galat koneksi
 - Tidak ada SDK penyedia database di klien (tanpa `supabase-js`, tanpa anon key, tanpa kunci yang terekspos)
 
 ## Setup lokal
@@ -139,8 +139,8 @@ tabel `sessions` atau tunggu kedaluwarsa.
   **dan** per IP). PIN kelompok: 6 karakter, alfabet tanpa karakter ambigu (`0/O`, `1/I/L`), unik.
 - **Gerbang akses di server**: seluruh route fase proyek & akhir memakai `requireGroupMember()`; route guru memakai
   `requireTeacher()`. Siswa yang belum bergabung di kelompok menerima **403** walau memanggil API langsung.
-- **Validasi input** di server (panjang, tipe, rentang, daftar status), tautan hanya https dari
-  `drive.google.com`, `docs.google.com`, `youtube.com`, `youtu.be` dan selalu ditampilkan dengan
+- **Validasi input** di server (panjang, tipe, rentang, daftar status). Tautan luar hanya https dari
+  `drive.google.com` / `docs.google.com` (tautan YouTube kini ditolak) dan selalu ditampilkan dengan
   `rel="noopener noreferrer"`.
 - **Header keamanan** lewat `next.config.ts`: `X-Content-Type-Options`, `Referrer-Policy`, dan `X-Frame-Options`
   (khusus deployment Vercel agar pratinjau lokal tetap bisa dibingkai).
@@ -149,16 +149,30 @@ tabel `sessions` atau tunggu kedaluwarsa.
 - **String koneksi dibersihkan** sebelum dipakai (`src/lib/db-url.ts`): parameter khusus libpq seperti
   `channel_binding=require` dibuang agar postgres-js tidak gagal dengan `unrecognized configuration parameter`.
 
+## Pemandu langkah, pengingat jurnal, dan cara menulis ≤ / ≥
+
+- **Pemandu langkah** (`src/lib/steps.ts` + `NextStepBar`): setiap halaman siswa menampilkan “Langkah n dari 11”, apa
+  yang harus dikerjakan, tombol **Lanjut** dan **← Kembali**. Setelah menekan **Tandai selesai**, tombol
+  **Lanjut: <langkah berikutnya>** muncul **di samping** tombol itu (juga di Lab Grafik).
+- **Notice berjalan pengingat jurnal** (`JournalTicker`): marquee di bawah header untuk siswa yang sudah masuk fase
+  proyek (sudah punya kelompok). Teksnya menyesuaikan: “jurnal hari ini belum diisi …” atau “sudah diisi, terima
+  kasih”, ditambah pesan pengingat terakhir dari guru. Berhenti saat disorot kursor dan otomatis menjadi teks statis
+  bila pengguna mengaktifkan *prefers-reduced-motion*. “Hari ini” memakai zona **Asia/Jakarta**
+  (`src/lib/date.ts`), bukan UTC server.
+- **Menuliskan ≤ dan ≥**: papan tombol besar `≤` / `≥` (dan `<` `>` `=`) menyisipkan tanda tepat di posisi kursor —
+  ada di Lab Grafik dan di halaman Susun Pertidaksamaan. Selain itu mengetik `<=`, `>=`, `=<`, `=>`, bahkan `x < = 40`
+  otomatis berubah menjadi `≤` / `≥` (`normalizeTypedInequality`), dengan posisi kursor tetap benar.
+
 ## Pemetaan RPP → aplikasi
 
 | Bagian RPP | Wujud di aplikasi |
 |---|---|
 | Konteks D'Culinary, kelas X AKL | Seluruh cerita, contoh data, soal kuis, dan teks antarmuka |
-| Project Planning Sheet | `/proyek/perencanaan` — 10 bagian (pertanyaan, produk, peran, sumber data, pertanyaan wawancara, jadwal, nomor urut hari wawancara, bentuk produk akhir, tautan pedoman, etika) |
-| Form Wawancara | `/proyek/wawancara` — **tanpa waktu produksi**; 2–6 bahan pokok, stok, harga jual satuan, biaya produksi, status kelengkapan + tindak lanjut, peringatan satuan campuran, tautan foto LKPD, catatan keterbatasan |
+| Project Planning Sheet | `/proyek/perencanaan` — 9 bagian (pertanyaan, produk, peran, sumber data, pertanyaan wawancara, jadwal, nomor urut hari wawancara, bentuk produk akhir, etika) |
+| Form Wawancara | `/proyek/wawancara` — **tanpa waktu produksi**; 2–6 bahan pokok, stok, harga jual satuan, biaya produksi, status kelengkapan + tindak lanjut, peringatan satuan campuran, catatan keterbatasan |
 | Lab Grafik ala GeoGebra | `<LabGrafik mode="eksplorasi" \| "verifikasi">` — siswa mengetik pertidaksamaan, DHP diarsir, label di dekat tiap garis, pan/zoom, **tanpa slider, tanpa klik titik pojok, tanpa nilai Z otomatis** |
 | Kuis | 10 soal konteks nasi ayam & rice bowl, **tanpa batas kelulusan**, skor kesiapan + pembahasan, soal & opsi diacak di server |
-| Jurnal harian | `/proyek/jurnal` — berbasis tanggal + label kegiatan, kolom kontribusi wajib, tautan dokumentasi, entri anggota lain hanya baca |
+| Jurnal harian | `/proyek/jurnal` — berbasis tanggal + label kegiatan, kolom kontribusi wajib, entri anggota lain hanya baca, **notice berjalan pengingat harian** di header |
 | Produk akhir | `/akhir/produk` — satu pengumpulan per kelompok, **tautan Drive + ringkasan**, tanpa unggahan berkas |
 | Refleksi | `/akhir/refleksi` — lima pertanyaan + rating 1–5 |
 | Guru memantau | `/guru/dashboard` — saran kelompok heterogen, panel per kelompok, slot wawancara, pengingat, catatan guru, ekspor CSV |
@@ -167,13 +181,14 @@ tabel `sessions` atau tunggu kedaluwarsa.
 
 1. **Gerbang fase proyek** = sudah tergabung di kelompok (PIN). Tidak ada syarat skor kuis; kuis sebaiknya tetap
    dikerjakan karena skornya dipakai untuk menyusun kelompok.
-2. **Fungsi tujuan** = keuntungan per unit (harga jual satuan − biaya produksi per unit), sehingga kolom biaya
+2. **Fungsi tujuan** = keuntungan per pcs (harga jual 1 pcs − biaya produksi 1 pcs), sehingga kolom biaya
    produksi tetap ada. Bentuknya ditulis `Z = (untung A)x + (untung B)y`.
 3. **Titik pojok dan nilai optimum dikerjakan manual** di LKPD. Lab Grafik hanya menggambar garis, label, dan DHP;
    tidak ada penanda titik pojok maupun perhitungan Z.
 4. **Skor kuis untuk pembagian kelompok** memakai percobaan **pertama** (default, lebih adil sebagai tes kesiapan),
    dan dapat diubah guru menjadi **skor tertinggi** di pengaturan.
-5. **Produk akhir dan dokumentasi berupa tautan** (Google Drive), bukan unggahan berkas, sehingga tidak ada berkas
+5. **Produk akhir berupa tautan Google Drive** — satu-satunya tempat unggahan dalam proyek; tidak ada unggahan
+   berkas ke database, sehingga tidak ada berkas
    besar di database.
 6. **Data contoh** pada modul dan Lab Grafik (nasi ayam & rice bowl) diberi label “data contoh, bukan data asli
    D'Culinary”.
@@ -282,7 +297,6 @@ curl -s -H "Authorization: Bearer $CRON_SECRET" https://<domain>/api/health   # 
 
 ## Yang belum dikerjakan / catatan lanjutan
 
-- Video cerita masalah diisi guru melalui pengaturan (tautan YouTube). Berkas video tidak dibundel di repo.
 - Gambar produk di `/public/produk` adalah ilustrasi, bukan foto asli D'Culinary; guru dapat menggantinya dengan
   foto asli (nama berkas sama).
 - Belum ada mode offline; aplikasi memerlukan koneksi internet.

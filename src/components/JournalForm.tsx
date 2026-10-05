@@ -13,7 +13,6 @@ export type JournalEntry = {
   activity: string;
   obstacle: string;
   contribution: string;
-  docLink: string | null;
   isMine: boolean;
   updatedAt: string;
 };
@@ -24,7 +23,6 @@ const EMPTY = {
   activity: "",
   obstacle: "",
   contribution: "",
-  docLink: "",
 };
 
 export default function JournalForm({
@@ -60,7 +58,6 @@ export default function JournalForm({
         activity: form.activity,
         obstacle: form.obstacle,
         contribution: form.contribution,
-        docLink: form.docLink.trim() === "" ? null : form.docLink.trim(),
       };
       if (editingId === null) {
         await apiFetch("/api/journal", { method: "POST", body });
@@ -101,7 +98,6 @@ export default function JournalForm({
       activity: entry.activity,
       obstacle: entry.obstacle,
       contribution: entry.contribution,
-      docLink: entry.docLink ?? "",
     });
   }
 
@@ -172,16 +168,6 @@ export default function JournalForm({
           />
         </div>
 
-        <div>
-          <label className="field-label">Tautan dokumentasi (Google Drive, opsional)</label>
-          <input
-            className="field"
-            value={form.docLink}
-            onChange={(event) => setForm({ ...form, docLink: event.target.value })}
-            placeholder="https://drive.google.com/..."
-          />
-        </div>
-
         {error && <p className="chip chip-bad w-full justify-start">{error}</p>}
         {message && <p className="chip chip-ok w-full justify-start">{message}</p>}
 
@@ -212,14 +198,6 @@ export default function JournalForm({
               <p className="mt-2 text-sm text-cream-100">{entry.activity}</p>
               {entry.obstacle && <p className="muted mt-1">Kendala: {entry.obstacle}</p>}
               <p className="mt-1 text-sm text-ember-300">Kontribusi: {entry.contribution}</p>
-              {entry.docLink && (
-                <p className="muted mt-1">
-                  Dokumentasi:{" "}
-                  <a href={entry.docLink} target="_blank" rel="noopener noreferrer">
-                    {entry.docLink}
-                  </a>
-                </p>
-              )}
               {entry.isMine && (
                 <div className="mt-2 flex gap-2">
                   <button type="button" className="btn btn-small" onClick={() => startEdit(entry)} disabled={busy}>

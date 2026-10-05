@@ -75,7 +75,7 @@ export default async function StudentDashboard() {
     : null;
 
   const memahami: Step[] = [
-    { label: "Cerita masalah & video", href: "/belajar/video", done: progressItems.has("video") },
+    { label: "Cerita masalah", href: "/belajar/cerita", done: progressItems.has("cerita") },
     { label: "Modul tiga bagian", href: "/belajar/modul", done: progressItems.has("modul") },
     { label: "Lab Grafik (eksplorasi)", href: "/belajar/grafik", done: progressItems.has("grafik") },
     {

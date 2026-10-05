@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireTeacher } from "@/lib/auth";
-import { badRequest, readJson, route } from "@/lib/http";
-import { normalizeExternalLink } from "@/lib/links";
+import { readJson, route } from "@/lib/http";
 import { getSettings, saveSettings, type QuizScoreMode } from "@/lib/settings";
 import { asBoolean, asNumber, oneOf } from "@/lib/validation";
 
@@ -17,7 +16,6 @@ export const GET = route(async () => {
  * - quizScoreMode: "pertama" (default) atau "tertinggi"
  * - currentStage: 1..3 (pertemuan/tahap berjalan)
  * - restrictRoster: hanya nama dalam daftar kelas yang boleh login
- * - youtubeUrl: tautan video cerita masalah (opsional)
  */
 export const PUT = route(async (request) => {
   await requireTeacher();
@@ -35,10 +33,7 @@ export const PUT = route(async (request) => {
     integer: true,
   });
   const restrictRoster = asBoolean(body.restrictRoster ?? false, "Batasi ke daftar kelas");
-  const youtubeUrl = normalizeExternalLink(body.youtubeUrl ?? null) ?? "";
 
-  const settings = await saveSettings({ quizScoreMode, currentStage, restrictRoster, youtubeUrl });
+  const settings = await saveSettings({ quizScoreMode, currentStage, restrictRoster });
   return NextResponse.json({ ok: true, settings, message: "Pengaturan tersimpan." });
 });
-
-void badRequest;

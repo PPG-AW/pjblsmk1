@@ -50,7 +50,9 @@ export const PUT = route(async (request) => {
   const title = asString(body.title, "Judul produk akhir", { min: 5, max: 200 });
   const link = normalizeExternalLink(body.link);
   if (!link) {
-    throw badRequest("Tautan Google Drive wajib diisi (mis. tautan laporan, poster, atau video kelompok).");
+    throw badRequest(
+      "Tautan Google Drive wajib diisi. Unggah berkas produk akhir kelompokmu ke Google Drive, lalu tempel tautannya di sini.",
+    );
   }
   const summary = asString(body.summary, "Ringkasan hasil", { min: 50, max: 3000 });
   const source = asString(body.source, "Sumber data", { min: 5, max: 1000 });

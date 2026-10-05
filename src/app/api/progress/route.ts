@@ -6,7 +6,7 @@ import { badRequest, readJson, route } from "@/lib/http";
 import { oneOf } from "@/lib/validation";
 
 /** Item progres fase memahami (terbuka untuk semua siswa yang login). */
-const OPEN_ITEMS = ["video", "modul", "grafik"] as const;
+const OPEN_ITEMS = ["cerita", "modul", "grafik"] as const;
 /** Item progres fase proyek (wajib sudah tergabung di kelompok). */
 const GROUP_ITEMS = ["grafik_verifikasi"] as const;
 

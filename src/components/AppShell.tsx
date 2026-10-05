@@ -1,11 +1,18 @@
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
+import JournalTicker from "@/components/JournalTicker";
 import NextStepBar from "@/components/NextStepBar";
 import { STUDENT_STEPS } from "@/lib/steps";
 
 export type ShellSession =
   | { kind: "guest" }
-  | { kind: "student"; name: string; groupName: string | null }
+  | {
+      kind: "student";
+      name: string;
+      groupName: string | null;
+      /** Info pengingat jurnal harian; null bila siswa belum bergabung di kelompok. */
+      ticker: { hasJournalToday: boolean; reminder: string | null } | null;
+    }
   | { kind: "teacher" };
 
 
@@ -64,6 +71,13 @@ export default function AppShell({
             ))}
           </nav>
         )}
+
+        {session.kind === "student" && session.ticker && (
+          <JournalTicker
+            hasJournalToday={session.ticker.hasJournalToday}
+            reminder={session.ticker.reminder}
+          />
+        )}
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-6">{children}</main>
@@ -71,10 +85,7 @@ export default function AppShell({
       {isStudent && <NextStepBar />}
 
       <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-xs text-cream-400">
-        <p>
-          DapurSPtLDV — proyek PjBL Program Linear (SPtLDV) kelas X AKL. Data proyek disimpan di server
-          (Postgres/Neon) sehingga guru dapat memantau dari perangkat mana pun.
-        </p>
+        <p>DapurSPtLDV — proyek PjBL Program Linear (SPtLDV) kelas X AKL.</p>
       </footer>
     </div>
   );

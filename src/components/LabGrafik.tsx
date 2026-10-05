@@ -12,6 +12,7 @@ import {
   type HalfPlane,
   type Point,
 } from "@/lib/geometry";
+import SymbolKeypad from "@/components/SymbolKeypad";
 import {
   caretAfterNormalize,
   isParseFailure,
@@ -456,27 +457,8 @@ export default function LabGrafik({
               <strong>&gt;</strong> digambar sebagai garis putus-putus.
             </p>
 
-            <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-kitchen-700/60 bg-kitchen-850/60 px-3 py-2">
-              <span className="font-mono text-[11px] tracking-wide text-cream-400 uppercase">
-                Ketik ≤ dengan tombol ini
-              </span>
-              {["≤", "≥", "<", ">", "="].map((symbol) => (
-                <button
-                  key={symbol}
-                  type="button"
-                  className="btn btn-small"
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => insertSymbol(symbol)}
-                  aria-label={`Sisipkan tanda ${symbol}`}
-                >
-                  {symbol}
-                </button>
-              ))}
-              <span className="muted text-xs">
-                atau langsung ketik <span className="code-chip">&lt;=</span> pada papan tombol — otomatis menjadi{" "}
-                <span className="code-chip">≤</span> (begitu juga <span className="code-chip">&gt;=</span> menjadi{" "}
-                <span className="code-chip">≥</span>).
-              </span>
+            <div className="mt-3">
+              <SymbolKeypad onInsert={insertSymbol} />
             </div>
 
             {mode === "eksplorasi" && presets.length > 0 && (
@@ -786,8 +768,8 @@ export default function LabGrafik({
           )}
 
           {doneItem && (
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-3">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   className="btn btn-primary"
@@ -796,21 +778,20 @@ export default function LabGrafik({
                 >
                   {done ? "Sudah ditandai selesai ✓" : marking ? "Menyimpan…" : "Tandai selesai"}
                 </button>
+                {done && nextStep && (
+                  <Link className="btn btn-primary" href={nextStep.href}>
+                    Lanjut: {nextStep.short} →
+                  </Link>
+                )}
                 {constraints.length === 0 && (
                   <span className="muted">Tambahkan dan gambar minimal satu pertidaksamaan dulu.</span>
                 )}
               </div>
               {done && nextStep && (
-                <div className="flex flex-wrap items-center gap-3 rounded-xl border border-herb-500/40 bg-herb-500/10 px-3 py-2">
-                  <span className="text-sm text-herb-300">
-                    {mode === "eksplorasi"
-                      ? "Lab Grafik eksplorasi selesai. Lanjutkan ke langkah berikutnya."
-                      : "Verifikasi grafik selesai. Lanjutkan ke langkah berikutnya."}
-                  </span>
-                  <Link className="btn btn-primary btn-small" href={nextStep.href}>
-                    Lanjut: {nextStep.short} →
-                  </Link>
-                </div>
+                <p className="muted">
+                  {mode === "eksplorasi" ? "Lab Grafik eksplorasi selesai." : "Verifikasi grafik selesai."} Silakan
+                  lanjut ke langkah berikutnya lewat tombol di atas.
+                </p>
               )}
             </div>
           )}
