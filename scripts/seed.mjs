@@ -63,7 +63,7 @@ async function main() {
       INSERT INTO quiz_attempts (student_id, attempt_no, score, total, answers)
       VALUES (${student.id}, 1, ${score}, 10, '[]'::jsonb)`;
     await sql`
-      INSERT INTO progress (student_id, item) VALUES (${student.id}, 'video'), (${student.id}, 'modul')
+      INSERT INTO progress (student_id, item) VALUES (${student.id}, 'cerita'), (${student.id}, 'modul')
       ON CONFLICT DO NOTHING`;
   }
 
