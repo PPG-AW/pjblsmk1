@@ -2,7 +2,7 @@
  * Seed data contoh untuk PENGEMBANGAN LOKAL saja.
  *
  * Skrip ini MENOLAK berjalan bila DATABASE_URL bukan host lokal (localhost /
- * 127.0.0.1), supaya data kelas asli di Supabase tidak pernah tertimpa.
+ * 127.0.0.1), supaya data kelas asli di database produksi tidak pernah tertimpa.
  *
  * Jalankan: npm run db:seed
  */

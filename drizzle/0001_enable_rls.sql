@@ -7,6 +7,11 @@
 --
 -- Jangan menambahkan policy apa pun di sini: akses data hanya boleh lewat
 -- route API Next.js (server side) yang sudah memakai helper otorisasi.
+--
+-- Catatan Neon: Neon tidak memiliki role anon/authenticated dan tidak
+-- menyediakan API PostgREST, sehingga pernyataan di bawah hanya bersifat
+-- pengaman tambahan (blok DO otomatis dilewati). Aplikasi tetap berfungsi
+-- normal karena terhubung sebagai pemilik tabel.
 -- ---------------------------------------------------------------------------
 
 ALTER TABLE "students" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
