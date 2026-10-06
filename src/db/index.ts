@@ -8,7 +8,7 @@ import * as schema from "./schema";
  * Akses database HANYA dari server (Postgres terkelola: Neon / Supabase / Aiven).
  *
  * - Driver: postgres-js, `prepare: false` wajib untuk koneksi lewat pooler
- *   (PgBouncer/PgBouncer-transaction mode, Supavisor) — prepared statement tidak
+ *   (PgBouncer/PgBouncer-transaction mode, Supavisor), prepared statement tidak
  *   bertahan antar transaksi di mode itu.
  * - URL dibersihkan dulu oleh `sanitizeConnectionUrl()`: parameter seperti
  *   `channel_binding=require` (dipakai Neon pada string barunya) tidak dipahami
@@ -65,7 +65,7 @@ export function resetDb(): void {
   globalForDb.__dapurDb = undefined;
   if (client) {
     void client.end({ timeout: 1 }).catch(() => {
-      /* koneksi memang sudah mati — tidak perlu dilaporkan */
+      /* koneksi memang sudah mati, tidak perlu dilaporkan */
     });
   }
 }

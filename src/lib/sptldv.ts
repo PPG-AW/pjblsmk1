@@ -28,7 +28,7 @@ export const SIX_PHASES = [
 export const NO_FABRICATION_RULE =
   "Dilarang mengarang data. Data yang tidak diperoleh dicatat sebagai keterbatasan, dan asumsi apa pun harus disepakati dengan guru.";
 
-export const SAMPLE_DATA_LABEL = "Data contoh — bukan data asli D'Culinary.";
+export const SAMPLE_DATA_LABEL = "Data contoh, bukan data asli D'Culinary.";
 
 /* -------------------------------------------------------------------------- */
 /* Cerita masalah (3 babak)                                                   */
@@ -37,19 +37,19 @@ export const SAMPLE_DATA_LABEL = "Data contoh — bukan data asli D'Culinary.";
 export const STORY_CHAPTERS = [
   {
     id: "babak-1",
-    title: "Babak 1 — Keputusan produksi setiap hari",
+    title: "Babak 1: Keputusan produksi setiap hari",
     body:
       "Setiap pagi, pengurus D'Culinary harus memutuskan berapa banyak tiap produk yang akan dibuat: roti, tahu walik, risol, pempek, atau menu lain yang sedang dipesan pelanggan. Keputusan ini harus diambil sebelum membeli bahan, sedangkan pesanan baru diketahui setelah produk siap. Salah menaksir jumlah produksi berarti produk sisa atau kehabisan.",
   },
   {
     id: "babak-2",
-    title: "Babak 2 — Bahan dan modal terbatas",
+    title: "Babak 2: Bahan dan modal terbatas",
     body:
-      "D'Culinary hanya punya stok bahan dan modal terbatas setiap hari. Semua produk memakai bahan yang sama — tepung, minyak, ayam, sayur, kemasan — sehingga menambah produksi satu produk berarti mengurangi kesempatan memproduksi produk lain. Karena itu sering muncul pertanyaan: produk mana yang paling menguntungkan untuk diprioritaskan?",
+      "D'Culinary hanya punya stok bahan dan modal terbatas setiap hari. Semua produk memakai bahan yang sama, yaitu tepung, minyak, ayam, sayur, dan kemasan, sehingga menambah produksi satu produk berarti mengurangi kesempatan memproduksi produk lain. Karena itu sering muncul pertanyaan: produk mana yang paling menguntungkan untuk diprioritaskan?",
   },
   {
     id: "babak-3",
-    title: "Babak 3 — Tantangan untuk kelompokmu",
+    title: "Babak 3: Tantangan untuk kelompokmu",
     body:
       "Kelompokmu diminta menyelidiki salah satu pasangan produk D'Culinary. Kumpulkan data nyata melalui wawancara dan observasi, susun model matematika (sistem pertidaksamaan linear dua variabel dan fungsi tujuan), lalu tentukan kombinasi produksi yang memberi keuntungan maksimum. Data tidak boleh dikarang: bila data sulit diperoleh, catat sebagai keterbatasan.",
   },
@@ -117,21 +117,21 @@ export type GraphPreset = {
 export const EXPLORE_PRESETS: GraphPreset[] = [
   {
     id: "beras",
-    title: "Contoh 1 — Kendala beras saja",
+    title: "Contoh 1: Kendala beras saja",
     description:
       "Nasi ayam memakai 100 g beras, rice bowl 150 g, stok beras 6.000 g. Perhatikan: satu garis saja menghasilkan daerah yang tidak terbatas.",
     lines: ["100x + 150y <= 6000", "x >= 0", "y >= 0"],
   },
   {
     id: "dua-bahan",
-    title: "Contoh 2 — Beras + ayam",
+    title: "Contoh 2: Beras + ayam",
     description:
       "Tambahkan kendala ayam: nasi ayam 80 g, rice bowl 40 g, stok 4.000 g. Lihat bagaimana irisan dua kendala mempersempit daerah penyelesaian.",
     lines: ["100x + 150y <= 6000", "80x + 40y <= 4000", "x >= 0", "y >= 0"],
   },
   {
     id: "tanda-garis",
-    title: "Contoh 3 — Bandingkan ≤ dan <",
+    title: "Contoh 3: Bandingkan ≤ dan <",
     description:
       "Ganti salah satu tanda menjadi < (misalnya y < 40) dan bandingkan: tanda < digambar sebagai garis putus-putus.",
     lines: ["2x + 3y <= 120", "y < 40", "x >= 0", "y >= 0"],

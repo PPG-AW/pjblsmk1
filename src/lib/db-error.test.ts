@@ -19,10 +19,12 @@ describe("pengenalan galat koneksi database", () => {
     expect(disabled?.kind).toBe("unreachable");
   });
 
-  it("memberi petunjuk khusus Neon pada pesan database tidak terjangkau", () => {
+  it("pesan untuk pengguna memakai bahasa awam dan bisa ditindaklanjuti", () => {
     const failure = databaseFailure(new Error("timeout exceeded when trying to connect"));
-    expect(failure?.message).toContain("Neon");
-    expect(failure?.message).toContain("bangun");
+    expect(failure?.message).toContain("coba lagi");
+    expect(failure?.message).toContain("hubungi guru");
+    // Tidak boleh ada istilah teknis di pesan yang dibaca siswa.
+    expect(failure?.message).not.toMatch(/Neon|Postgres|database|server/i);
   });
 
   it("mengenali koneksi yang diputus pooler", () => {

@@ -3,14 +3,14 @@
  *
  * Dua kelompok galat yang paling sering muncul:
  *
- * 1. `unreachable` — database tidak bisa dihubungi sama sekali:
+ * 1. `unreachable`, database tidak bisa dihubungi sama sekali:
  *    - Neon (paket gratis) menidurkan compute setelah 5 menit menganggur dan
- *      bangun otomatis dalam ratusan milidetik — koneksi pertama bisa meleset;
+ *      bangun otomatis dalam ratusan milidetik, koneksi pertama bisa meleset;
  *    - string koneksi salah / password salah / host keliru;
  *    - kuota paket gratis habis sehingga endpoint dinonaktifkan.
  *    Gejala: `Tenant or user not found`, `ENOTFOUND`, `ECONNREFUSED`,
  *    `password authentication failed`, `endpoint has been disabled`, dsb.
- * 2. `dropped` — koneksi diputus sesaat oleh pooler/serverless
+ * 2. `dropped`, koneksi diputus sesaat oleh pooler/serverless
  *    (`connection to client lost`, `Connection terminated unexpectedly`).
  *
  * Keduanya dikembalikan ke siswa/guru sebagai pesan bahasa Indonesia yang
@@ -78,9 +78,8 @@ export function databaseFailure(error: unknown): DatabaseFailure | null {
       kind: "unreachable",
       status: 503,
       message:
-        "Database belum bisa dihubungi. Bila memakai Neon, database yang menganggur butuh beberapa detik " +
-        "untuk bangun — coba lagi sebentar lagi. Bila tetap gagal, minta guru memeriksa string koneksi " +
-        "(DATABASE_URL) di Vercel.",
+        "Data belum bisa dibaca saat ini. Sambungan kadang perlu beberapa detik untuk bangun kembali, " +
+        "jadi coba lagi sebentar lagi. Bila tetap gagal, hubungi guru.",
     };
   }
 
@@ -89,7 +88,7 @@ export function databaseFailure(error: unknown): DatabaseFailure | null {
       kind: "dropped",
       status: 503,
       message:
-        "Koneksi ke database terputus sesaat. Coba sekali lagi — tekan tombol yang tadi. " +
+        "Sambungan sempat terputus. Coba sekali lagi dengan menekan tombol yang tadi. " +
         "Belum tentu data tersimpan, jadi pastikan formulirmu masih terisi sebelum menekan ulang.",
     };
   }

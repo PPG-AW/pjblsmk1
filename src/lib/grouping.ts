@@ -118,7 +118,7 @@ export function suggestHeterogeneousGroups(
   const note =
     `Mode "${mode}": ${groups.length} kelompok berukuran ${sizes}. ` +
     (withoutScore.length > 0
-      ? `${withoutScore.length} siswa belum punya skor kuis dan ditempatkan di akhir — tandai agar diberi perhatian.`
+      ? `${withoutScore.length} siswa belum punya skor kuis dan ditempatkan di akhir. Tandai agar diberi perhatian.`
       : "Semua siswa sudah punya skor kuis.");
 
   return { groups, mode, note, withoutScore };

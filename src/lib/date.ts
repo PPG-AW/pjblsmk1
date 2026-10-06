@@ -3,7 +3,7 @@
  *
  * Aplikasi ini dipakai di Indonesia (WIB, UTC+7) sementara server Vercel berjalan
  * pada UTC. Tanpa zona waktu eksplisit, "hari ini" akan berganti pada pukul 07.00
- * pagi WIB — mengganggu jurnal harian dan pengingatnya. Semua perhitungan tanggal
+ * pagi WIB, mengganggu jurnal harian dan pengingatnya. Semua perhitungan tanggal
  * karena itu memakai zona waktu Asia/Jakarta.
  */
 const JAKARTA = "Asia/Jakarta";

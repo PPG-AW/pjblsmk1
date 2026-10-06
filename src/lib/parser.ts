@@ -38,7 +38,7 @@ export const PARSE_EXAMPLE = "2x + 3y <= 120";
 const UNICODE_REPLACEMENTS: [RegExp, string][] = [
   [/[≤⩽]/g, "<="],
   [/[≥⩾]/g, ">="],
-  [/[−–—]/g, "-"],
+  [/[\u2212\u2013\u2014]/g, "-"],
   [/[×·∙]/g, "*"],
   [/[“”"']/g, ""],
   [/\u00a0/g, " "],
@@ -441,7 +441,7 @@ export function normalizeTypedInequality(text: string): string {
 export function caretAfterNormalize(raw: string, caret: number): number {
   const clamped = Math.max(0, Math.min(caret, raw.length));
   // Menormalkan potongan sebelum kursor selalu memberi hasil yang sama dengan
-  // menghitung pergeseran satu per satu — sekaligus otomatis benar untuk
+  // menghitung pergeseran satu per satu, sekaligus otomatis benar untuk
   // penggantian 2 karakter menjadi 1, urutan terbalik (=<), maupun ` < = `.
   return normalizeTypedInequality(raw.slice(0, clamped)).length;
 }

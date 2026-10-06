@@ -10,7 +10,7 @@ export type StudentStep = {
   /** Nomor langkah yang ditampilkan (0 = beranda, tidak diberi nomor). */
   n: number;
   href: string;
-  /** Label pada menu header — harus sama dengan navigasi sebelumnya. */
+  /** Label pada menu header, harus sama dengan navigasi sebelumnya. */
   nav: string;
   /** Judul singkat untuk tombol lanjut/kembali. */
   short: string;
@@ -49,7 +49,7 @@ export const STUDENT_STEPS: StudentStep[] = [
     href: "/belajar/grafik",
     nav: "3 · Lab Grafik",
     short: "Lab Grafik",
-    title: "Lab Grafik — eksplorasi",
+    title: "Lab Grafik: eksplorasi",
     todo: "Ketik pertidaksamaanmu sendiri, amati DHP, lalu tekan “Tandai selesai”.",
   },
   {
@@ -98,7 +98,7 @@ export const STUDENT_STEPS: StudentStep[] = [
     nav: "9 · Jurnal",
     short: "Jurnal",
     title: "Jurnal harian",
-    todo: "Tulis jurnal tiap pertemuan — kontribusimu wajib diisi.",
+    todo: "Tulis jurnal setiap hari kegiatan. Kontribusimu wajib diisi.",
   },
   {
     n: 10,

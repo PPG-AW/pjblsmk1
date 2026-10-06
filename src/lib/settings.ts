@@ -9,7 +9,7 @@ export type QuizScoreMode = "pertama" | "tertinggi";
 export type AppSettings = {
   /** Skor kuis yang dipakai untuk pembagian kelompok. */
   quizScoreMode: QuizScoreMode;
-  /** Pertemuan/tahap berjalan (1, 2, 3) — pengganti "hari ke-N". */
+  /** Pertemuan/tahap berjalan (1, 2, 3), pengganti "hari ke-N". */
   currentStage: number;
   /** Bila aktif, hanya nama dalam daftar kelas yang boleh login. */
   restrictRoster: boolean;
@@ -71,11 +71,11 @@ export function quizScoreFor(
 export function stageLabel(stage: number): string {
   switch (stage) {
     case 1:
-      return "Pertemuan 1 — memahami masalah & menyusun rencana";
+      return "Pertemuan 1: memahami masalah & menyusun rencana";
     case 2:
-      return "Pertemuan 2 — wawancara, data, dan model matematika";
+      return "Pertemuan 2: wawancara, data, dan model matematika";
     case 3:
-      return "Pertemuan 3 — produk akhir, presentasi, dan refleksi";
+      return "Pertemuan 3: produk akhir, presentasi, dan refleksi";
     default:
       return "Pertemuan berjalan";
   }

@@ -2,7 +2,7 @@
  * Model matematika kelompok: membangun "kunci" dari data wawancara, mengecek
  * jawaban siswa, dan menyusun petunjuk bertahap (tanpa memberi jawaban akhir).
  *
- * Titik pojok & nilai optimum TIDAK dihitung di sini — siswa mengerjakannya
+ * Titik pojok & nilai optimum TIDAK dihitung di sini, siswa mengerjakannya
  * manual di LKPD.
  */
 import type { Ingredient, InequalityCheckResult, InequalityLineResult, MoneyData } from "@/lib/types";

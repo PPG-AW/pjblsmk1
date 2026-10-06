@@ -156,7 +156,7 @@ export function clipPolygonToBounds(polygon: Point[], bounds: Bounds): Point[] {
 
 /**
  * Hitung irisan semua pertidaksamaan aktif (DHP).
- * Titik pojok & nilai optimum SENGAJA tidak dihitung di sini — dikerjakan
+ * Titik pojok & nilai optimum SENGAJA tidak dihitung di sini, dikerjakan
  * siswa secara manual di LKPD.
  */
 export function feasibleRegion(

@@ -62,7 +62,22 @@ export type GroupOverview = {
     objectiveReady: boolean;
     updatedAt: string | null;
   };
-  journal: { total: number; perMember: Record<number, number>; lastAt: string | null };
+  journal: {
+    total: number;
+    perMember: Record<number, number>;
+    lastAt: string | null;
+    /** Grid pemantauan: daftar tanggal (terbaru dulu) + sel per anggota per tanggal. */
+    grid: {
+      dates: string[];
+      members: {
+        studentId: number;
+        name: string;
+        cells: Record<string, { count: number; activityTypes: string[] }>;
+        total: number;
+        lastDate: string | null;
+      }[];
+    };
+  };
   finalProduct: { type: string; title: string; link: string; updatedAt: string | null } | null;
   reflections: { done: number; total: number };
   status: GroupStatus;
@@ -225,6 +240,36 @@ export async function getTeacherOverview(): Promise<TeacherOverview> {
     .groupBy(journals.groupId);
   const journalLast = new Map(journalLastRows.map((row) => [row.groupId!, row.lastAt]));
 
+  // Entri jurnal untuk grid laporan per kelompok (dibatasi 60 hari terakhir
+  // supaya muatannya tetap kecil walau proyek berjalan lama).
+  const journalRows = await db
+    .select({
+      groupId: journals.groupId,
+      studentId: journals.studentId,
+      entryDate: journals.entryDate,
+      activityType: journals.activityType,
+    })
+    .from(journals)
+    .where(sql`${journals.entryDate} >= to_char(now() - interval '60 days', 'YYYY-MM-DD')`)
+    .orderBy(desc(journals.entryDate));
+
+  const gridByGroup = new Map<
+    number,
+    { dates: Set<string>; cells: Map<number, Map<string, { count: number; activityTypes: Set<string> }>> }
+  >();
+  for (const row of journalRows) {
+    if (row.groupId === null) continue;
+    const entry = gridByGroup.get(row.groupId) ?? { dates: new Set<string>(), cells: new Map() };
+    entry.dates.add(row.entryDate);
+    const perStudent = entry.cells.get(row.studentId) ?? new Map<string, { count: number; activityTypes: Set<string> }>();
+    const cell = perStudent.get(row.entryDate) ?? { count: 0, activityTypes: new Set<string>() };
+    cell.count += 1;
+    cell.activityTypes.add(row.activityType);
+    perStudent.set(row.entryDate, cell);
+    entry.cells.set(row.studentId, perStudent);
+    gridByGroup.set(row.groupId, entry);
+  }
+
   const studentById = new Map(studentRows.map((row) => [row.id, row]));
   const planningByGroup = new Map(planningRows.map((row) => [row.groupId, row]));
   const finalByGroup = new Map(finalRows.map((row) => [row.groupId, row]));
@@ -319,6 +364,27 @@ export async function getTeacherOverview(): Promise<TeacherOverview> {
         total: members.reduce((sum, member) => sum + member.journalCount, 0),
         perMember: Object.fromEntries(members.map((member) => [member.studentId, member.journalCount])),
         lastAt: journalLast.get(group.id) ?? null,
+        grid: (() => {
+          const raw = gridByGroup.get(group.id);
+          const dates = raw ? [...raw.dates].sort((a, b) => (a < b ? 1 : -1)).slice(0, 14) : [];
+          return {
+            dates,
+            members: members.map((member) => {
+              const perStudent = raw?.cells.get(member.studentId);
+              const cells: Record<string, { count: number; activityTypes: string[] }> = {};
+              let total = 0;
+              let lastDate: string | null = null;
+              if (perStudent) {
+                for (const [date, cell] of perStudent) {
+                  cells[date] = { count: cell.count, activityTypes: [...cell.activityTypes] };
+                  total += cell.count;
+                  if (!lastDate || date > lastDate) lastDate = date;
+                }
+              }
+              return { studentId: member.studentId, name: member.name, cells, total, lastDate };
+            }),
+          };
+        })(),
       },
       finalProduct: finalByGroup.has(group.id)
         ? {

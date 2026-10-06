@@ -56,7 +56,7 @@ export function route<Ctx = unknown>(handler: RouteHandler<Ctx>) {
       if (error instanceof EnvError) {
         console.error("[env]", error.message);
         return NextResponse.json(
-          { error: "Konfigurasi server belum lengkap. Hubungi guru/administrator." },
+          { error: "Aplikasi belum siap dipakai. Hubungi guru." },
           { status: 503 },
         );
       }
@@ -88,7 +88,7 @@ export function route<Ctx = unknown>(handler: RouteHandler<Ctx>) {
 
       console.error("[api]", error);
       return NextResponse.json(
-        { error: "Terjadi kesalahan di server. Coba lagi sebentar lagi." },
+        { error: "Ada gangguan sebentar. Coba lagi sebentar lagi." },
         { status: 500 },
       );
     }

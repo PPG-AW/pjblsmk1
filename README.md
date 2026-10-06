@@ -1,4 +1,4 @@
-# DapurSPtLDV — Investigasi D'Culinary
+# DapurSPtLDV, Investigasi D'Culinary
 
 Aplikasi web pendamping **RPP Program Linear / Sistem Pertidaksamaan Linear Dua Variabel (SPtLDV)** untuk
 **SMK N 1 Salatiga, Matematika Fase E, kelas X AKL**, dengan model **Project Based Learning (PjBL)** 3 pertemuan
@@ -84,7 +84,7 @@ Neon dipakai karena **tidak ada tombol “Restore project”**: database yang me
 otomatis** ketika ada permintaan (cold start biasanya di bawah 1 detik).
 
 1. Daftar di <https://neon.tech> → **Create project**.
-   - Region: **AWS Asia Pacific (Singapore) — `aws-ap-southeast-1`** supaya dekat dengan region Vercel `sin1`.
+   - Region: **AWS Asia Pacific (Singapore), `aws-ap-southeast-1`** supaya dekat dengan region Vercel `sin1`.
    - Database & role bawaan (`neondb`, `neondb_owner`) boleh dipakai apa adanya.
 2. Di console Neon → menu **SQL Editor** → tempel seluruh isi berkas **`database-setup.sql`** (ada di root repo
    ini) → **Run**. Berkas itu membuat 17 tabel + indeks sekaligus. Jalankan sekali saja.
@@ -92,8 +92,7 @@ otomatis** ketika ada permintaan (cold start biasanya di bawah 1 detik).
 3. Neon → tombol **Connect** → salin **dua** string:
    - **Pooled connection** (nama host memuat `-pooler`) → `DATABASE_URL` (dipakai aplikasi).
    - **Direct connection** (tanpa `-pooler`) → `DIRECT_URL` (dipakai `drizzle-kit` untuk migrasi).
-   - Keduanya wajib memuat `?sslmode=require`. Bila string Neon memuat `channel_binding=require`, biarkan saja —
-     aplikasi membuang parameter itu otomatis (`src/lib/db-url.ts`) karena postgres-js tidak memahaminya.
+   - Keduanya wajib memuat `?sslmode=require`. Bila string Neon memuat `channel_binding=require`, biarkan saja, aplikasi membuang parameter itu otomatis (`src/lib/db-url.ts`) karena postgres-js tidak memahaminya.
 4. Mengenai **RLS**: migrasi `0001_enable_rls.sql` mengaktifkan Row Level Security tanpa policy dan mencabut hak
    akses role `anon`/`authenticated`. Di Neon perintah itu tidak berpengaruh (Neon tidak punya role tersebut dan
    tidak menyediakan API PostgREST); dibiarkan sebagai pengaman kalau database kelak diekspos lewat Data API.
@@ -159,8 +158,7 @@ tabel `sessions` atau tunggu kedaluwarsa.
   kasih”, ditambah pesan pengingat terakhir dari guru. Berhenti saat disorot kursor dan otomatis menjadi teks statis
   bila pengguna mengaktifkan *prefers-reduced-motion*. “Hari ini” memakai zona **Asia/Jakarta**
   (`src/lib/date.ts`), bukan UTC server.
-- **Menuliskan ≤ dan ≥**: papan tombol besar `≤` / `≥` (dan `<` `>` `=`) menyisipkan tanda tepat di posisi kursor —
-  ada di Lab Grafik dan di halaman Susun Pertidaksamaan. Selain itu mengetik `<=`, `>=`, `=<`, `=>`, bahkan `x < = 40`
+- **Menuliskan ≤ dan ≥**: papan tombol besar `≤` / `≥` (dan `<` `>` `=`) menyisipkan tanda tepat di posisi kursor, ada di Lab Grafik dan di halaman Susun Pertidaksamaan. Selain itu mengetik `<=`, `>=`, `=<`, `=>`, bahkan `x < = 40`
   otomatis berubah menjadi `≤` / `≥` (`normalizeTypedInequality`), dengan posisi kursor tetap benar.
 
 ## Pemetaan RPP → aplikasi
@@ -168,14 +166,14 @@ tabel `sessions` atau tunggu kedaluwarsa.
 | Bagian RPP | Wujud di aplikasi |
 |---|---|
 | Konteks D'Culinary, kelas X AKL | Seluruh cerita, contoh data, soal kuis, dan teks antarmuka |
-| Project Planning Sheet | `/proyek/perencanaan` — 9 bagian (pertanyaan, produk, peran, sumber data, pertanyaan wawancara, jadwal, nomor urut hari wawancara, bentuk produk akhir, etika) |
-| Form Wawancara | `/proyek/wawancara` — **tanpa waktu produksi**; 2–6 bahan pokok, stok, harga jual satuan, biaya produksi, status kelengkapan + tindak lanjut, peringatan satuan campuran, catatan keterbatasan |
-| Lab Grafik ala GeoGebra | `<LabGrafik mode="eksplorasi" \| "verifikasi">` — siswa mengetik pertidaksamaan, DHP diarsir, label di dekat tiap garis, pan/zoom, **tanpa slider, tanpa klik titik pojok, tanpa nilai Z otomatis** |
+| Project Planning Sheet | `/proyek/perencanaan`, 9 bagian (pertanyaan, produk, peran, sumber data, pertanyaan wawancara, jadwal, nomor urut hari wawancara, bentuk produk akhir, etika) |
+| Form Wawancara | `/proyek/wawancara`, **tanpa waktu produksi**; 2–6 bahan pokok, stok, harga jual satuan, biaya produksi, status kelengkapan + tindak lanjut, peringatan satuan campuran, catatan keterbatasan |
+| Lab Grafik ala GeoGebra | `<LabGrafik mode="eksplorasi" \| "verifikasi">`, siswa mengetik pertidaksamaan, DHP diarsir, label di dekat tiap garis, pan/zoom, **tanpa slider, tanpa klik titik pojok, tanpa nilai Z otomatis** |
 | Kuis | 10 soal konteks nasi ayam & rice bowl, **tanpa batas kelulusan**, skor kesiapan + pembahasan, soal & opsi diacak di server |
-| Jurnal harian | `/proyek/jurnal` — berbasis tanggal + label kegiatan, kolom kontribusi wajib, entri anggota lain hanya baca, **notice berjalan pengingat harian** di header |
-| Produk akhir | `/akhir/produk` — satu pengumpulan per kelompok, **tautan Drive + ringkasan**, tanpa unggahan berkas |
-| Refleksi | `/akhir/refleksi` — lima pertanyaan + rating 1–5 |
-| Guru memantau | `/guru/dashboard` — saran kelompok heterogen, panel per kelompok, slot wawancara, pengingat, catatan guru, ekspor CSV |
+| Jurnal harian | `/proyek/jurnal`, berbasis tanggal + label kegiatan, kolom kontribusi wajib, entri anggota lain hanya baca, **notice berjalan pengingat harian** di header |
+| Produk akhir | `/akhir/produk`, satu pengumpulan per kelompok, **tautan Drive + ringkasan**, tanpa unggahan berkas |
+| Refleksi | `/akhir/refleksi`, lima pertanyaan + rating 1–5 |
+| Guru memantau | `/guru/dashboard` berbasis **tiga menu**: **Rekap nilai siswa** (ringkasan kelas, rekap nilai per siswa, rekap per kelompok, ekspor CSV), **Laporan jurnal** (status kelompok, grid jurnal per kelompok per tanggal, kontribusi per anggota, pengingat), **Pengaturan** (skor kuis & tahap berjalan, daftar kelas, saran kelompok heterogen, kelola kelompok/PIN/anggota, slot wawancara) |
 
 ## Keputusan desain (asumsi)
 
@@ -187,7 +185,7 @@ tabel `sessions` atau tunggu kedaluwarsa.
    tidak ada penanda titik pojok maupun perhitungan Z.
 4. **Skor kuis untuk pembagian kelompok** memakai percobaan **pertama** (default, lebih adil sebagai tes kesiapan),
    dan dapat diubah guru menjadi **skor tertinggi** di pengaturan.
-5. **Produk akhir berupa tautan Google Drive** — satu-satunya tempat unggahan dalam proyek; tidak ada unggahan
+5. **Produk akhir berupa tautan Google Drive**, satu-satunya tempat unggahan dalam proyek; tidak ada unggahan
    berkas ke database, sehingga tidak ada berkas
    besar di database.
 6. **Data contoh** pada modul dan Lab Grafik (nasi ayam & rice bowl) diberi label “data contoh, bukan data asli
@@ -200,12 +198,22 @@ tabel `sessions` atau tunggu kedaluwarsa.
    akhir pada tahap Susun Pertidaksamaan, tetapi diberi petunjuk khusus agar siswa menuliskan sesuai satuan data
    wawancaranya. Di Lab Grafik, semua bentuk yang setara tetap digambar biasa (grafik memang memeriksa gambar DHP).
 10. **Tombol “Buka Lab Grafik untuk verifikasi”** ditampilkan kapan saja setelah data wawancara tersimpan, dan
-    diberi penekanan setelah model benar — sesuai kebebasan yang diberikan RPP.
+    diberi penekanan setelah model benar, sesuai kebebasan yang diberikan RPP.
 11. **Item berstatus “Belum ada”** tidak dipakai sebagai kendala; item “Belum jelas” tetap dipakai bila angkanya
     sudah ada, tetapi harus punya kolom tindak lanjut.
 12. **Slot wawancara** dibuat guru; satu slot hanya untuk satu kelompok (ditegakkan `unique` di database), sehingga
     pemilihan bersamaan ditolak dengan pesan ramah.
 13. **Pertemuan/tahap berjalan** (1, 2, 3) menggantikan pengaturan “hari ke-N” pada versi sebelumnya.
+
+## Gaya bahasa antarmuka
+
+- **Tanpa tanda pisah panjang (em dash)**: seluruh teks memakai koma, titik, atau titik dua. Diuji otomatis di
+  `src/components/TeacherDashboard.test.ts`.
+- **Halaman siswa hanya memuat keterangan untuk siswa**: tidak ada penjelasan server, API, database, atau istilah
+  teknis lain. Penjelasan teknis (mis. `DATABASE_URL`, `DIRECT_URL`, `/api/health`) dipindahkan ke bagian
+  **Keterangan untuk guru** pada halaman galat, atau ke dashboard guru.
+- **Dashboard guru memakai menu** supaya tidak berupa satu halaman panjang: Rekap nilai siswa, Laporan jurnal,
+  dan Pengaturan. Menu aktif ditandai dan konten hanya memuat satu menu pada satu waktu.
 
 ## Model data (Drizzle, 17 tabel)
 
@@ -218,10 +226,10 @@ Semua kolom foreign key yang sering difilter (`student_id`, `group_id`) memiliki
 
 ## Ekspor CSV (dashboard guru)
 
-- `?type=quiz` — skor kuis per siswa
-- `?type=groups` — daftar kelompok + PIN + skor rata-rata
-- `?type=journal` — kontribusi jurnal per anggota
-- `?type=status` — status setiap tahapan per kelompok
+- `?type=quiz`, skor kuis per siswa
+- `?type=groups`, daftar kelompok + PIN + skor rata-rata
+- `?type=journal`, kontribusi jurnal per anggota
+- `?type=status`, status setiap tahapan per kelompok
 
 ## Uji manual cepat (kriteria penerimaan)
 
@@ -239,7 +247,7 @@ curl -s -H "Authorization: Bearer $CRON_SECRET" localhost:3000/api/health
 Di Lab Grafik, ketik `2x+3y<=120` → tulisan otomatis berubah menjadi `2x+3y≤120`, garis berlabel muncul; tambahkan
 `x>=0` dan `y>=0` → irisan DHP tergambar; `y < 40` → garis putus-putus.
 
-**Menuliskan simbol ≤ dan ≥:** siswa cukup mengetik `<=` dan `>=` pada papan tombol — di Lab Grafik dan di halaman
+**Menuliskan simbol ≤ dan ≥:** siswa cukup mengetik `<=` dan `>=` pada papan tombol, di Lab Grafik dan di halaman
 Susun Pertidaksamaan, ketikan itu otomatis menjadi `≤`/`≥` sambil mempertahankan posisi kursor (fungsi
 `normalizeTypedInequality` + `caretAfterNormalize` di `src/lib/parser.ts`). Di Lab Grafik juga tersedia deretan
 tombol cepat `≤ ≥ < > =` yang menyisipkan simbol pada posisi kursor.
@@ -255,7 +263,7 @@ memutus koneksi menganggur, bukan dari kode aplikasi. Yang sudah dilakukan aplik
   sehingga soket tidak dipakai setelah mati;
 - pembungkus route (`src/lib/http.ts`) mengenali galat koneksi (`src/lib/db-error.ts`), membuang klien lama
   (`resetDb()`), lalu **mengulang sekali permintaan baca (GET/HEAD)**. Permintaan tulis tidak diulang otomatis
-  supaya data tidak tersimpan dua kali — siswa diminta menekan tombol simpan sekali lagi;
+  supaya data tidak tersimpan dua kali, siswa diminta menekan tombol simpan sekali lagi;
 - pesan galat diterjemahkan ke bahasa Indonesia (503 + penjelasan), bukan “Terjadi kesalahan di server”.
 
 Bila masih sering: pastikan `DATABASE_URL` memakai string **pooled** dari panel Neon (nama host memuat `-pooler`;
@@ -273,7 +281,7 @@ Bila ingin selalu hangat pada jam sekolah, pasang pemantau gratis (cron-job.org 
 
 String koneksi memuat parameter yang hanya dipahami `psql`/libpq (mis. `channel_binding=require`). Aplikasi
 membuang parameter tersebut otomatis (`src/lib/db-url.ts`, diuji unit test). Bila pesan ini muncul lagi pada
-parameter lain, tambahkan namanya ke `ALLOWED_QUERY_PARAMS`/daftar buang di berkas itu — atau hapus parameter itu
+parameter lain, tambahkan namanya ke `ALLOWED_QUERY_PARAMS`/daftar buang di berkas itu, atau hapus parameter itu
 dari string di Vercel.
 
 ### Halaman menampilkan “Sambungan ke database sedang bermasalah”
