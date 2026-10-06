@@ -427,10 +427,10 @@ export function trimNumber(value: number): string {
  */
 export function normalizeTypedInequality(text: string): string {
   return text
-    .replace(/<=/g, "≤")
-    .replace(/=</g, "≤")
-    .replace(/>=/g, "≥")
-    .replace(/=>/g, "≥");
+    .replace(/<\s*=/g, "≤")
+    .replace(/=\s*</g, "≤")
+    .replace(/>\s*=/g, "≥")
+    .replace(/=\s*>/g, "≥");
 }
 
 /**
@@ -440,8 +440,8 @@ export function normalizeTypedInequality(text: string): string {
  */
 export function caretAfterNormalize(raw: string, caret: number): number {
   const clamped = Math.max(0, Math.min(caret, raw.length));
-  const before = raw.slice(0, clamped);
-  const matches = before.match(/<=|=<|>=|=>/g);
-  const removed = matches ? matches.length : 0;
-  return Math.max(0, clamped - removed);
+  // Menormalkan potongan sebelum kursor selalu memberi hasil yang sama dengan
+  // menghitung pergeseran satu per satu — sekaligus otomatis benar untuk
+  // penggantian 2 karakter menjadi 1, urutan terbalik (=<), maupun ` < = `.
+  return normalizeTypedInequality(raw.slice(0, clamped)).length;
 }

@@ -162,10 +162,10 @@ export const GROUP_ROLES = [
 
 export const MINIMAL_DATA_CHECKLIST = [
   "Nama dua produk yang dianalisis (A dan B)",
-  "Kebutuhan minimal 2 bahan pokok untuk 1 unit produk A dan 1 unit produk B",
+  "Kebutuhan minimal 2 bahan pokok untuk 1 pcs produk A dan 1 pcs produk B",
   "Stok/total bahan yang tersedia",
-  "Harga jual satuan produk A dan produk B",
-  "Biaya produksi per unit produk A dan produk B",
+  "Harga jual per pcs produk A dan produk B",
+  "Biaya produksi per pcs produk A dan produk B",
 ];
 
 export const PRODUCT_PLACES = ["Kelas", "D'Culinary", "Di luar jam sekolah"];
@@ -255,7 +255,7 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
     ],
     correctIndex: 0,
     explanation:
-      "Koefisien fungsi tujuan adalah keuntungan per unit: Rp6.000 per porsi nasi ayam dan Rp7.000 per porsi rice bowl.",
+      "Koefisien fungsi tujuan adalah keuntungan per pcs: Rp6.000 per pcs nasi ayam dan Rp7.000 per pcs rice bowl.",
   },
   {
     id: "q5",
