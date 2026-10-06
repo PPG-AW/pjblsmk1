@@ -52,10 +52,10 @@ export default async function VerificationGraphPage() {
         <p className="font-mono text-xs tracking-widest text-ember-400 uppercase">
           Fase Proyek · 8 · Monitoring &amp; pengujian
         </p>
-        <h1 className="mt-1 font-display text-2xl text-cream-100">Lab Grafik — verifikasi</h1>
+        <h1 className="mt-1 font-display text-2xl text-cream-100">Lab Grafik: verifikasi</h1>
         <p className="mt-2 max-w-3xl text-sm text-cream-200">
           Ketik sistem pertidaksamaan model kelompokmu sendiri untuk memeriksa gambarnya. Kolom tidak diisi otomatis:
-          yang menulis tetap kamu. Cocokkan DHP yang muncul dengan hasil gambar manual di LKPD — titik pojok dan
+          yang menulis tetap kamu. Cocokkan DHP yang muncul dengan hasil gambar manual di LKPD. Titik pojok dan
           nilai optimum tetap dihitung manual.
         </p>
         <p className="note mt-3">

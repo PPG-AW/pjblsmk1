@@ -7,7 +7,7 @@ import { readJson, route } from "@/lib/http";
 import { REFLECTION_QUESTIONS, type ReflectionAnswers } from "@/lib/types";
 import { asNumber, asString } from "@/lib/validation";
 
-/** GET /api/reflection — refleksi milik siswa. */
+/** GET /api/reflection, refleksi milik siswa. */
 export const GET = route(async () => {
   const context = await requireGroupMember();
   const existing = await getStudentReflection(context.student.id);
@@ -23,7 +23,7 @@ export const GET = route(async () => {
   });
 });
 
-/** PUT /api/reflection — lima pertanyaan refleksi + rating 1–5. */
+/** PUT /api/reflection, lima pertanyaan refleksi + rating 1–5. */
 export const PUT = route(async (request) => {
   const context = await requireGroupMember();
   const body = await readJson(request);

@@ -22,12 +22,15 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         <div style={{ maxWidth: "560px" }}>
           <h1 style={{ fontSize: "22px", marginBottom: "8px" }}>Aplikasi gagal dimuat</h1>
           <p style={{ fontSize: "14px", lineHeight: 1.6 }}>
-            Muat ulang halaman ini. Bila tetap gagal, kemungkinan database (Neon) belum bisa dihubungi — minta guru
-            memeriksa DATABASE_URL di Vercel, lalu coba lagi.
+            Muat ulang halaman ini. Bila tetap gagal, mungkin sambungan data sedang bermasalah. Minta guru memeriksa
+            pengaturan aplikasi, lalu coba lagi.
           </p>
           <p style={{ fontSize: "12px", opacity: 0.7 }}>
-            Status server: <a href="/api/health" style={{ color: "#f2a25c" }}>/api/health</a>
-            {error.digest ? ` · kode galat: ${error.digest}` : ""}
+            Kode galat untuk dilaporkan ke guru: {error.digest ? <span>{error.digest}</span> : "tidak ada"}
+            {" · "}
+            <a href="/api/health" style={{ color: "#f2a25c" }}>
+              keterangan teknis
+            </a>
           </p>
           <button
             type="button"

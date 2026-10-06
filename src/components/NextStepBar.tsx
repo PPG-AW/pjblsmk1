@@ -8,7 +8,7 @@ import { LAST_STEP_NUMBER, nextStepFor, prevStepFor, stepFor } from "@/lib/steps
  * Bilah pengarah langkah yang tampil di bawah setiap halaman siswa.
  *
  * Tujuannya: siswa selalu tahu dia sedang di langkah berapa dan apa yang harus
- * dikerjakan, serta punya tombol "Lanjut" yang jelas — tanpa harus menebak dari
+ * dikerjakan, serta punya tombol "Lanjut" yang jelas, tanpa harus menebak dari
  * menu. Tidak tampil di halaman guru atau halaman yang tidak ada dalam urutan.
  */
 export default function NextStepBar() {
@@ -40,7 +40,7 @@ export default function NextStepBar() {
               {step.n === 0 ? `Mulai: ${next.short}` : `Lanjut: ${next.short}`} →
             </Link>
           ) : (
-            <span className="chip chip-ok">Semua langkah sudah tersedia — pastikan tidak ada yang terlewat ✓</span>
+            <span className="chip chip-ok">Semua langkah sudah tersedia. Pastikan tidak ada yang terlewat ✓</span>
           )}
         </div>
       </section>

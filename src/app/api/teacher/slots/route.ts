@@ -6,7 +6,7 @@ import { requireTeacher } from "@/lib/auth";
 import { readJson, route } from "@/lib/http";
 import { asArray, asNumber, asString, optionalString } from "@/lib/validation";
 
-/** GET /api/teacher/slots — daftar slot wawancara. */
+/** GET /api/teacher/slots, daftar slot wawancara. */
 export const GET = route(async () => {
   await requireTeacher();
   const db = getDb();
@@ -15,7 +15,7 @@ export const GET = route(async () => {
 });
 
 /**
- * POST /api/teacher/slots — buat slot wawancara.
+ * POST /api/teacher/slots, buat slot wawancara.
  * Body: { label, date } atau { count, date, prefix } untuk membuat beberapa sekaligus.
  */
 export const POST = route(async (request) => {

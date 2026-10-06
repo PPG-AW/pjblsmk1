@@ -76,7 +76,7 @@ export const POST = route(async (request) => {
   });
 });
 
-/** GET /api/groups/join — informasi kelompok siswa saat ini. */
+/** GET /api/groups/join, informasi kelompok siswa saat ini. */
 export const GET = route(async () => {
   const context = await requireStudent();
   if (!context.group) throw forbidden("Kamu belum tergabung di kelompok.");

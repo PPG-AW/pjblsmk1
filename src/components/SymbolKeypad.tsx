@@ -62,7 +62,7 @@ export default function SymbolKeypad({
 
       <p className="muted mt-2 text-xs">
         {hint ??
-          "Tombol menyisipkan tanda tepat di posisi kursor. Kalau lebih suka mengetik biasa, tulis \u003c= atau \u003e= — otomatis menjadi ≤ / ≥."}
+          "Tombol menyisipkan tanda tepat di posisi kursor. Kalau lebih suka mengetik biasa, tulis \u003c= atau \u003e= dan otomatis menjadi ≤ / ≥."}
       </p>
     </div>
   );

@@ -32,7 +32,7 @@ export default async function ModulePage() {
       </section>
 
       <section className="card space-y-3">
-        <h2 className="section-title">Bagian 1 — Menyusun model matematika</h2>
+        <h2 className="section-title">Bagian 1: Menyusun model matematika</h2>
         <div className="prose-block">
           <p>
             <strong>1) Tentukan variabel.</strong> Misalkan x = banyaknya produk A yang dibuat dan y = banyaknya
@@ -96,7 +96,7 @@ export default async function ModulePage() {
       </section>
 
       <section className="card space-y-3">
-        <h2 className="section-title">Bagian 2 — Menggambar grafik dan daerah penyelesaian (DHP)</h2>
+        <h2 className="section-title">Bagian 2: Menggambar grafik dan daerah penyelesaian (DHP)</h2>
         <div className="prose-block">
           <p>
             <strong>1)</strong> Ubah setiap pertidaksamaan menjadi persamaan garis, lalu gambar garisnya: cari titik
@@ -111,7 +111,7 @@ export default async function ModulePage() {
             untuk garis penuh (garis termasuk batas), dan &lt; atau &gt; untuk garis putus-putus.
           </p>
           <p>
-            Di Lab Grafik, kamu cukup mengetik pertidaksamaannya — garis dan arsiran DHP akan tergambar. Titik pojok
+            Di Lab Grafik, kamu cukup mengetik pertidaksamaannya, lalu garis dan arsiran DHP tergambar. Titik pojok
             tidak ditandai otomatis, agar kamu berlatih menentukannya sendiri.
           </p>
         </div>
@@ -122,7 +122,7 @@ export default async function ModulePage() {
       </section>
 
       <section className="card space-y-3">
-        <h2 className="section-title">Bagian 3 — Titik pojok dan nilai optimum</h2>
+        <h2 className="section-title">Bagian 3: Titik pojok dan nilai optimum</h2>
         <div className="prose-block">
           <p>
             <strong>1)</strong> Tentukan semua titik pojok (titik sudut) DHP. Titik pojok berasal dari perpotongan

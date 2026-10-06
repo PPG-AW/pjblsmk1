@@ -94,7 +94,7 @@ export default function FinalProductForm({
         />
         <p className="muted mt-1">
           Unggah berkas produk akhir kelompokmu ke Google Drive, lalu tempel tautannya di sini. Halaman ini
-          satu-satunya tempat unggahan dalam proyek — dokumen pendukung lain tidak perlu diunggah.
+          satu-satunya unggahan dalam proyek ini. Dokumen pendukung lain tidak perlu diunggah.
         </p>
         <p className="muted mt-1">{reminder}</p>
       </div>

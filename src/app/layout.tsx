@@ -31,32 +31,35 @@ const grotesk = Space_Grotesk({
 function DatabaseOfflineNotice() {
   return (
     <section className="card space-y-3">
-      <p className="font-mono text-xs tracking-widest text-berry-400 uppercase">Database sedang tidak bisa dihubungi</p>
-      <h1 className="font-display text-2xl text-cream-100">Aplikasi belum bisa membaca data</h1>
+      <p className="font-mono text-xs tracking-widest text-berry-400 uppercase">Aplikasi belum bisa dimuat</p>
+      <h1 className="font-display text-2xl text-cream-100">Muat ulang halaman ini sebentar lagi</h1>
       <p className="text-sm text-cream-200">
-        Penyebab paling sering: database Neon baru saja bangun dari mode hemat (compute tidur setelah 5 menit
-        menganggur), string koneksi belum benar, atau koneksi terputus sesaat.
+        Data pelajaranmu belum bisa dibaca saat ini. Biasanya gangguan ini hanya sebentar dan bukan salahmu. Tunggu
+        beberapa detik, lalu buka kembali halamannya.
       </p>
-      <ol className="prose-block list-decimal ps-5 text-sm">
-        <li>
-          <strong>Muat ulang halaman ini</strong> — bila hanya koneksi sesaat atau database baru bangun, biasanya
-          langsung normal dalam beberapa detik.
-        </li>
-        <li>
-          Bila tetap, <strong>guru</strong> memeriksa <span className="code-chip">DATABASE_URL</span> dan{" "}
-          <span className="code-chip">DIRECT_URL</span> di Vercel, lalu <strong>Redeploy</strong>.
-        </li>
-        <li>
-          Cek <a href="/api/health">/api/health</a>: <span className="code-chip">status: &quot;ok&quot;</span> berarti
-          sudah normal.
-        </li>
-      </ol>
+      <details className="text-sm">
+        <summary className="cursor-pointer text-cream-300">Keterangan untuk guru</summary>
+        <ol className="prose-block list-decimal ps-5 pt-2">
+          <li>
+            <strong>Muat ulang halaman ini</strong>. Bila hanya sambungan sesaat, biasanya langsung normal dalam
+            beberapa detik (database Neon tidur setelah 5 menit menganggur dan bangun otomatis).
+          </li>
+          <li>
+            Bila tetap, periksa <span className="code-chip">DATABASE_URL</span> dan{" "}
+            <span className="code-chip">DIRECT_URL</span> di Vercel, lalu <strong>Redeploy</strong>.
+          </li>
+          <li>
+            Cek <a href="/api/health">/api/health</a>: <span className="code-chip">status: &quot;ok&quot;</span>{" "}
+            berarti sudah normal.
+          </li>
+        </ol>
+      </details>
     </section>
   );
 }
 
 export const metadata: Metadata = {
-  title: "DapurSPtLDV — Investigasi D'Culinary",
+  title: "DapurSPtLDV: Investigasi D'Culinary",
   description:
     "Proyek PjBL Program Linear (SPtLDV) kelas X AKL SMK N 1 Salatiga dengan konteks unit usaha D'Culinary.",
 };
@@ -82,7 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     // Kredensial/env belum siap: tampilkan halaman sebagai tamu, tanpa crash.
     console.error("[layout] gagal membaca sesi:", error instanceof Error ? error.message : error);
     // Bila koneksi database yang bermasalah (mis. Neon baru bangun dari mode
-    // hemat, atau string koneksi salah), jangan lanjutkan merender halaman —
+    // hemat, atau string koneksi salah), jangan lanjutkan merender halaman, 
     // tampilkan penjelasan yang bisa langsung dibaca tanpa menunggu JavaScript.
     databaseDown = isConnectionError(error);
   }

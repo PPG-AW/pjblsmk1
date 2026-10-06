@@ -85,7 +85,7 @@ export default async function StudentDashboard() {
       detail:
         quizHistory.length > 0
           ? `Skor terakhir ${quizHistory[0]!.score}/${quizHistory[0]!.total} · ${quizHistory.length} percobaan`
-          : "Belum dikerjakan — tidak ada batas kelulusan, skor dipakai guru untuk menyusun kelompok.",
+          : "Belum dikerjakan. Tidak ada batas nilai, skormu dipakai guru untuk menyusun kelompok.",
     },
   ];
 
@@ -178,10 +178,9 @@ export default async function StudentDashboard() {
               </div>
             </div>
             <div className="note">
-              <p className="font-semibold">Akses terkunci di server</p>
+              <p className="font-semibold">Belum punya PIN?</p>
               <p className="mt-1">
-                Halaman dan API fase proyek hanya bisa dipakai anggota kelompok — bukan hanya disembunyikan di
-                tampilan. Jadi gabung kelompok dulu sebelum mencoba membuka tautannya.
+                PIN kelompok dibagikan guru. Bila PIN belum kamu terima, tanyakan kepada guru saat pertemuan berikutnya.
               </p>
             </div>
           </div>

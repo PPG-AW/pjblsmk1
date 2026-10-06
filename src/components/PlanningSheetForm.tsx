@@ -374,7 +374,7 @@ export default function PlanningSheetForm({
           menambahkannya.
         </p>
         <select className="field" value={slotId} onChange={(event) => setSlotId(event.target.value)}>
-          <option value="">— belum memilih slot —</option>
+          <option value="">(belum memilih slot)</option>
           {availableSlots.map((slot) => {
             const takenByOther = slot.groupId !== null && slot.groupId !== selectedSlotId;
             return (

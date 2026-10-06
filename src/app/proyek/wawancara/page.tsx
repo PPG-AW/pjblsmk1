@@ -45,8 +45,8 @@ export default async function InterviewPage() {
 
       {planning && (planning.productA || planning.productB) && (
         <section className="note-info">
-          Produk dari planning sheet kalian: <strong>{planning.productA || "—"}</strong> dan{" "}
-          <strong>{planning.productB || "—"}</strong>. Bila hasil wawancara menunjukkan produk lain, ubah di form di
+          Produk dari planning sheet kalian: <strong>{planning.productA || "belum diisi"}</strong> dan{" "}
+          <strong>{planning.productB || "belum diisi"}</strong>. Bila hasil wawancara menunjukkan produk lain, ubah di form di
           bawah sekaligus perbarui planning sheet.
         </section>
       )}

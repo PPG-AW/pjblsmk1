@@ -58,7 +58,7 @@ export default async function InequalityPage() {
         <h1 className="mt-1 font-display text-2xl text-cream-100">Susun Pertidaksamaan</h1>
         <p className="mt-2 max-w-3xl text-sm text-cream-200">
           Ubah data wawancaramu menjadi sistem pertidaksamaan. Kunci penilaian diambil dari data yang kalian isi
-          sendiri di Form Wawancara, dan petunjuk diberikan bertahap — bukan jawaban langsung.
+          sendiri di Form Wawancara, dan petunjuk diberikan bertahap, bukan jawaban langsung.
         </p>
         <p className="muted mt-2">
           Jumlah percobaanmu: {total[0]?.total ?? 0}. Riwayat 5 terakhir:{" "}

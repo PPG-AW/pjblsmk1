@@ -12,7 +12,7 @@ function readIds(body: Record<string, unknown>) {
   return { studentId, groupId };
 }
 
-/** POST /api/teacher/groups/members — pindahkan/masukkan siswa ke kelompok. */
+/** POST /api/teacher/groups/members, pindahkan/masukkan siswa ke kelompok. */
 export const POST = route(async (request) => {
   await requireTeacher();
   const { studentId, groupId } = readIds(await readJson(request));
@@ -31,7 +31,7 @@ export const POST = route(async (request) => {
   return NextResponse.json({ ok: true, message: "Anggota dipindahkan." });
 });
 
-/** DELETE /api/teacher/groups/members — keluarkan siswa dari kelompoknya. */
+/** DELETE /api/teacher/groups/members, keluarkan siswa dari kelompoknya. */
 export const DELETE = route(async (request) => {
   await requireTeacher();
   const { studentId, groupId } = readIds(await readJson(request));

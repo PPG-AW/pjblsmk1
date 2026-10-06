@@ -72,7 +72,7 @@ export default function QuizRunner({
           <p className="note mt-3">
             Skor ini <strong>bukan</strong> nilai kelulusan. Guru memakai skor ini (bersama hasil kuis temanmu)
             untuk menyusun kelompok heterogen agar setiap kelompok punya anggota dengan kesiapan beragam. Tidak ada
-            syarat skor minimum untuk masuk fase proyek — yang menentukan adalah keanggotaan kelompok (PIN).
+            syarat nilai minimum untuk masuk fase proyek. Yang menentukan adalah keanggotaan kelompok (PIN).
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <Link className="btn btn-primary" href="/proyek/perencanaan">

@@ -14,7 +14,7 @@ import {
 export const dynamic = "force-dynamic";
 
 const PRODUCTS = [
-  { name: "Roti", src: "/produk/roti.jpg", caption: "Roti — produk andalan D'Culinary" },
+  { name: "Roti", src: "/produk/roti.jpg", caption: "Roti, produk andalan D'Culinary" },
   { name: "Tahu walik", src: "/produk/tahu-walik.jpg", caption: "Tahu walik" },
   { name: "Risol", src: "/produk/risol.jpg", caption: "Risol" },
   { name: "Pempek", src: "/produk/pempek.jpg", caption: "Pempek" },
@@ -65,7 +65,7 @@ export default async function StoryPage() {
       <section className="card">
         <h2 className="section-title">Pertanyaan pemantik</h2>
         <p className="muted mt-1">
-          Renungkan dulu pertanyaan-pertanyaan ini sebelum masuk ke modul. Tidak perlu ditulis panjang — yang
+          Renungkan dulu pertanyaan-pertanyaan ini sebelum masuk ke modul. Tidak perlu ditulis panjang. Yang
           penting kamu punya gambaran awal sebelum menyusun model matematika.
         </p>
         <ul className="prose-block mt-2 list-disc ps-5">

@@ -50,7 +50,7 @@ function defaultSheet(groupId: number, members: { id: number }[]): {
   };
 }
 
-/** GET /api/planning — lembar perencanaan kelompok + data pendukung. */
+/** GET /api/planning, lembar perencanaan kelompok + data pendukung. */
 export const GET = route(async () => {
   const context = await requireGroupMember();
   const groupId = context.group.id;
@@ -98,7 +98,7 @@ export const GET = route(async () => {
   });
 });
 
-/** PUT /api/planning — simpan lembar perencanaan (semua anggota boleh menyunting). */
+/** PUT /api/planning, simpan lembar perencanaan (semua anggota boleh menyunting). */
 export const PUT = route(async (request) => {
   const context = await requireGroupMember();
   const groupId = context.group.id;

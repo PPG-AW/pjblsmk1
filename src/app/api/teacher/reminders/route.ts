@@ -14,7 +14,7 @@ export const GET = route(async () => {
   return NextResponse.json({ reminders: rows });
 });
 
-/** POST /api/teacher/reminders — kirim pengingat untuk siswa. */
+/** POST /api/teacher/reminders, kirim pengingat untuk siswa. */
 export const POST = route(async (request) => {
   await requireTeacher();
   const body = await readJson(request);
@@ -24,7 +24,7 @@ export const POST = route(async (request) => {
   return NextResponse.json({ ok: true, reminder: inserted[0] });
 });
 
-/** PATCH /api/teacher/reminders — aktif/non-aktifkan pengingat. */
+/** PATCH /api/teacher/reminders, aktif/non-aktifkan pengingat. */
 export const PATCH = route(async (request) => {
   await requireTeacher();
   const body = await readJson(request);

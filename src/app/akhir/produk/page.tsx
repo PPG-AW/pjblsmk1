@@ -36,7 +36,7 @@ export default async function FinalProductPage() {
         <h1 className="mt-1 font-display text-2xl text-cream-100">Produk akhir kelompok</h1>
         <p className="mt-2 max-w-3xl text-sm text-cream-200">
           Kumpulkan tautan produk akhir kelompokmu (Google Drive) beserta ringkasan hasil. Tidak ada lagi unggahan
-          berkas besar ke server — cukup tautan, sehingga tidak ada file besar tersimpan di database.
+          berkas besar. Cukup tautan, jadi penilaian tetap rapi dan mudah dibuka.
         </p>
         <p className="note mt-3">{DRIVE_SHARING_REMINDER}</p>
       </section>

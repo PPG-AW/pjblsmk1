@@ -14,7 +14,7 @@ function parseId(raw: string): number {
   return id;
 }
 
-/** PATCH /api/teacher/groups/[id] — ubah nama kelompok. */
+/** PATCH /api/teacher/groups/[id], ubah nama kelompok. */
 export const PATCH = route<Context>(async (request, context) => {
   await requireTeacher();
   const { id: rawId } = await context.params;
@@ -28,7 +28,7 @@ export const PATCH = route<Context>(async (request, context) => {
   return NextResponse.json({ ok: true });
 });
 
-/** DELETE /api/teacher/groups/[id] — hapus kelompok beserta data anggotanya. */
+/** DELETE /api/teacher/groups/[id], hapus kelompok beserta data anggotanya. */
 export const DELETE = route<Context>(async (_request, context) => {
   await requireTeacher();
   const { id: rawId } = await context.params;

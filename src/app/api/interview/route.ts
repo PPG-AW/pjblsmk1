@@ -25,7 +25,7 @@ function normalizeUnit(unit: string): string {
   return unit.trim().toLowerCase();
 }
 
-/** GET /api/interview — data wawancara kelompok + status kelengkapan. */
+/** GET /api/interview, data wawancara kelompok + status kelengkapan. */
 export const GET = route(async () => {
   const context = await requireGroupMember();
   const groupId = context.group.id;
@@ -69,7 +69,7 @@ export const GET = route(async () => {
   });
 });
 
-/** PUT /api/interview — simpan data hasil wawancara. */
+/** PUT /api/interview, simpan data hasil wawancara. */
 export const PUT = route(async (request) => {
   const context = await requireGroupMember();
   const groupId = context.group.id;

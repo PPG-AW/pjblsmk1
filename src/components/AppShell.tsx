@@ -85,7 +85,7 @@ export default function AppShell({
       {isStudent && <NextStepBar />}
 
       <footer className="mx-auto max-w-6xl px-4 pb-10 pt-4 text-xs text-cream-400">
-        <p>DapurSPtLDV — proyek PjBL Program Linear (SPtLDV) kelas X AKL.</p>
+        <p>DapurSPtLDV · proyek PjBL Program Linear (SPtLDV) kelas X AKL.</p>
       </footer>
     </div>
   );

@@ -14,7 +14,7 @@ function parseId(raw: string): number {
   return id;
 }
 
-/** PATCH /api/teacher/slots/[id] — ubah nama/tanggal slot. */
+/** PATCH /api/teacher/slots/[id], ubah nama/tanggal slot. */
 export const PATCH = route<Context>(async (request, context) => {
   await requireTeacher();
   const { id: rawId } = await context.params;
@@ -34,7 +34,7 @@ export const PATCH = route<Context>(async (request, context) => {
   return NextResponse.json({ ok: true });
 });
 
-/** DELETE /api/teacher/slots/[id] — hapus slot (kelompok otomatis kehilangan slot). */
+/** DELETE /api/teacher/slots/[id], hapus slot (kelompok otomatis kehilangan slot). */
 export const DELETE = route<Context>(async (_request, context) => {
   await requireTeacher();
   const { id: rawId } = await context.params;

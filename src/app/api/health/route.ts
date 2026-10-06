@@ -9,7 +9,7 @@ import { route } from "@/lib/http";
  * GET /api/health
  *
  * Selalu melakukan `SELECT 1` (murah) supaya:
- * - cron harian Vercel (vercel.json) benar-benar menyentuh database — pada Neon
+ * - cron harian Vercel (vercel.json) benar-benar menyentuh database, pada Neon
  *   ini sekaligus membangunkan compute yang tidur, sehingga permintaan siswa
  *   pertama tidak menunggu cold start;
  * - layanan pemantau eksternal (mis. UptimeRobot/cron-job.org) bisa memakai

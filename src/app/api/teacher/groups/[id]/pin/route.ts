@@ -8,7 +8,7 @@ import { generatePin } from "@/lib/pin";
 
 type Context = { params: Promise<{ id: string }> };
 
-/** POST /api/teacher/groups/[id]/pin — reset PIN kelompok. */
+/** POST /api/teacher/groups/[id]/pin, reset PIN kelompok. */
 export const POST = route<Context>(async (_request, context) => {
   await requireTeacher();
   const { id: rawId } = await context.params;

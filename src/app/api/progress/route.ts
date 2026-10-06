@@ -10,7 +10,7 @@ const OPEN_ITEMS = ["cerita", "modul", "grafik"] as const;
 /** Item progres fase proyek (wajib sudah tergabung di kelompok). */
 const GROUP_ITEMS = ["grafik_verifikasi"] as const;
 
-/** POST /api/progress — tandai langkah selesai. */
+/** POST /api/progress, tandai langkah selesai. */
 export const POST = route(async (request) => {
   const body = await readJson(request);
   const item = oneOf(body.item, "item", [...OPEN_ITEMS, ...GROUP_ITEMS], "Item progres");

@@ -439,7 +439,7 @@ export default function InterviewForm(props: Props) {
             <span className="chip chip-ok">{readyIngredients.length} bahan siap dipakai sebagai kendala</span>
           ) : (
             <span className="chip chip-warn">
-              {readyIngredients.length} bahan siap — minimal 2 agar bisa lanjut ke Susun Pertidaksamaan
+              {readyIngredients.length} bahan siap. Minimal 2 agar bisa lanjut ke Susun Pertidaksamaan
             </span>
           )}
         </p>
@@ -463,7 +463,7 @@ export default function InterviewForm(props: Props) {
           {busy ? "Menyimpan…" : "Simpan data wawancara"}
         </button>
         <span className="muted">
-          Data yang tersimpan di server inilah yang menjadi kunci penilaian pada tahap Susun Pertidaksamaan.
+          Data yang kamu simpan di sini menjadi acuan pada tahap Susun Pertidaksamaan.
         </span>
       </div>
     </form>

@@ -67,7 +67,7 @@ export default function MarkDoneButton({
       )}
       {!done && target && (
         <p className="muted">
-          Setelah semua selesai, tekan tombol di atas — tombol <strong>Lanjut: {targetLabel}</strong> akan muncul di
+          Setelah semua selesai, lalu tombol <strong>Lanjut: {targetLabel}</strong> akan muncul di
           sampingnya.
         </p>
       )}

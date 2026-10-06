@@ -7,7 +7,7 @@ import { conflict, readJson, route } from "@/lib/http";
 import { generatePin } from "@/lib/pin";
 import { asString } from "@/lib/validation";
 
-/** POST /api/teacher/groups — buat kelompok baru (PIN dibuat otomatis). */
+/** POST /api/teacher/groups, buat kelompok baru (PIN dibuat otomatis). */
 export const POST = route(async (request) => {
   await requireTeacher();
   const body = await readJson(request);

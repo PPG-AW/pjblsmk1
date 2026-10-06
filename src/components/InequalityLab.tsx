@@ -137,10 +137,9 @@ export default function InequalityLab({
         <p className="muted">
           Tulis satu pertidaksamaan per baris (boleh tidak berurutan, boleh memakai spasi bebas). Contoh bentuk:{" "}
           <span className="code-chip">100x + 150y ≤ 6000</span>,{" "}
-          <span className="code-chip">x ≥ 0</span>. Cukup ketik <span className="code-chip">&lt;=</span> —
+          <span className="code-chip">x ≥ 0</span>. Cukup ketik <span className="code-chip">&lt;=</span> dan
           otomatis menjadi <span className="code-chip">≤</span> (juga <span className="code-chip">&gt;=</span>{" "}
-          menjadi <span className="code-chip">≥</span>). Parser juga menerima &lt; &gt;, pemisah ribuan titik
-          (6.000), dan desimal koma.
+          menjadi <span className="code-chip">≥</span>). Kamu juga boleh menulis &lt; &gt;, memakai titik sebagai pemisah ribuan (6.000), dan koma sebagai desimal.
         </p>
 
         <SymbolKeypad

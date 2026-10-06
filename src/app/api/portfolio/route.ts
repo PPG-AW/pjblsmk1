@@ -19,7 +19,7 @@ function validateType(value: unknown): string {
   return text;
 }
 
-/** GET /api/portfolio — produk akhir kelompok (satu pengumpulan per kelompok). */
+/** GET /api/portfolio, produk akhir kelompok (satu pengumpulan per kelompok). */
 export const GET = route(async () => {
   const context = await requireGroupMember();
   const product = await getFinalProduct(context.group.id);
@@ -41,7 +41,7 @@ export const GET = route(async () => {
   });
 });
 
-/** PUT /api/portfolio — simpan/ubah produk akhir (tautan Google Drive, tanpa unggah file). */
+/** PUT /api/portfolio, simpan/ubah produk akhir (tautan Google Drive, tanpa unggah file). */
 export const PUT = route(async (request) => {
   const context = await requireGroupMember();
   const body = await readJson(request);

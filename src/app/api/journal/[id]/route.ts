@@ -27,7 +27,7 @@ async function loadOwnEntry(id: number, studentId: number, groupId: number) {
   return entry;
 }
 
-/** PATCH /api/journal/[id] — siswa menyunting entri jurnalnya sendiri. */
+/** PATCH /api/journal/[id], siswa menyunting entri jurnalnya sendiri. */
 export const PATCH = route<Context>(async (request, context) => {
   const auth = await requireGroupMember();
   const { id: rawId } = await context.params;
@@ -54,7 +54,7 @@ export const PATCH = route<Context>(async (request, context) => {
   return NextResponse.json({ ok: true, message: "Entri jurnal diperbarui." });
 });
 
-/** DELETE /api/journal/[id] — siswa menghapus entri jurnalnya sendiri. */
+/** DELETE /api/journal/[id], siswa menghapus entri jurnalnya sendiri. */
 export const DELETE = route<Context>(async (_request, context) => {
   const auth = await requireGroupMember();
   const { id: rawId } = await context.params;

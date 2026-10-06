@@ -106,7 +106,7 @@ export const GET = route(async (request) => {
       group.interview.unclearCount,
       group.interview.missingCount,
       group.journal.perMember ? `${group.journal.total} entri pada ${Object.keys(group.journal.perMember).length} anggota` : "0",
-      group.finalProduct ? `${productLabel(group.finalProduct.type)} — ${group.finalProduct.title}` : "belum ada",
+      group.finalProduct ? `${productLabel(group.finalProduct.type)}: ${group.finalProduct.title}` : "belum ada",
       `${group.reflections.done}/${group.reflections.total}`,
       group.status,
       group.statusReasons.join("; "),

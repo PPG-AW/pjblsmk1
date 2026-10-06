@@ -17,7 +17,7 @@ export default async function GraphExplorationPage() {
     <div className="space-y-5">
       <section className="card">
         <p className="font-mono text-xs tracking-widest text-ember-400 uppercase">Fase Memahami · 3 dari 4</p>
-        <h1 className="mt-1 font-display text-2xl text-cream-100">Lab Grafik — eksplorasi</h1>
+        <h1 className="mt-1 font-display text-2xl text-cream-100">Lab Grafik: eksplorasi</h1>
         <p className="mt-2 max-w-3xl text-sm text-cream-200">
           Ketik pertidaksamaanmu sendiri dan lihat garis beserta daerah penyelesaian (DHP) tergambar. Kanvas dimulai
           kosong: kamu yang menuliskan pertidaksamaannya, bukan slider atau contoh otomatis.
@@ -34,7 +34,7 @@ export default async function GraphExplorationPage() {
         <h2 className="section-title">Latihan terbimbing</h2>
         <ol className="prose-block mt-2 list-decimal ps-5">
           <li>
-            Ketik <span className="code-chip">100x + 150y &lt;= 6000</span> — begitu kamu menekan{" "}
+            Ketik <span className="code-chip">100x + 150y &lt;= 6000</span>. Begitu kamu menekan{" "}
             <span className="code-chip">=</span>, tandanya otomatis menjadi{" "}
             <span className="code-chip">≤</span>. Amati garis dan daerah yang diarsir.
           </li>
@@ -50,7 +50,7 @@ export default async function GraphExplorationPage() {
           </li>
           <li>
             Butuh simbol? Pakai tombol <span className="code-chip">≤</span>{" "}
-            <span className="code-chip">≥</span> di atas daftar baris — menyisipkan tepat di posisi kursor.
+            <span className="code-chip">≥</span> di atas daftar baris. Tanda masuk tepat di posisi kursor.
           </li>
           <li>Coba tombol &ldquo;Sesuaikan otomatis&rdquo; lalu &ldquo;Atur ulang tampilan&rdquo;.</li>
         </ol>

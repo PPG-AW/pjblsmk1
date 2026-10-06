@@ -6,7 +6,7 @@ import Link from "next/link";
  * Notice berjalan (marquee) pengingat jurnal harian.
  *
  * Muncul untuk siswa yang sudah masuk fase proyek (sudah bergabung di kelompok),
- * karena jurnal diisi setiap hari kegiatan — bukan hanya saat pertemuan di kelas.
+ * karena jurnal diisi setiap hari kegiatan, bukan hanya saat pertemuan di kelas.
  * Teksnya berjalan pelan, berhenti saat disorot kursor, dan otomatis menjadi teks
  * biasa bila pengguna mengaktifkan "kurangi gerakan" (prefers-reduced-motion).
  */
@@ -20,7 +20,7 @@ export default function JournalTicker({
   const parts: string[] = [];
 
   if (hasJournalToday) {
-    parts.push("Jurnal hari ini sudah kamu isi — terima kasih! Isi lagi setiap hari kegiatan berikutnya.");
+    parts.push("Jurnal hari ini sudah kamu isi, terima kasih! Isi lagi setiap hari kegiatan berikutnya.");
   } else {
     parts.push(
       "Pengingat: jurnal hari ini belum diisi. Tulis apa yang kelompokmu kerjakan + kontribusimu (wajib, minimal 10 karakter).",

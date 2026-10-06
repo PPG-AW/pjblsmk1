@@ -8,7 +8,7 @@ import { badRequest, readJson, route } from "@/lib/http";
 import { JOURNAL_ACTIVITY_TYPES } from "@/lib/sptldv";
 import { asString, oneOf } from "@/lib/validation";
 
-/** GET /api/journal — entri jurnal seluruh anggota kelompok. */
+/** GET /api/journal, entri jurnal seluruh anggota kelompok. */
 export const GET = route(async () => {
   const context = await requireGroupMember();
   const entries = await getJournalEntries(context.group.id);
@@ -23,7 +23,7 @@ export const GET = route(async () => {
   });
 });
 
-/** POST /api/journal — tambah entri jurnal harian milik sendiri. */
+/** POST /api/journal, tambah entri jurnal harian milik sendiri. */
 export const POST = route(async (request) => {
   const context = await requireGroupMember();
   const body = await readJson(request);

@@ -532,7 +532,7 @@ export default function LabGrafik({
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="section-title">Grafik</h2>
               <p className="muted">
-                Geser kanvas untuk menggeser (pan), gulir/pinch untuk zoom. Digambar dengan SVG, tanpa library
+                Geser kanvas untuk memindah tampilan, gulir atau cubit untuk memperbesar.
                 tambahan.
               </p>
             </div>
@@ -763,7 +763,7 @@ export default function LabGrafik({
           {mode === "verifikasi" && (
             <div className="note">
               Cocokkan DHP dengan hasil gambar manual kelompokmu di LKPD. Titik pojok dan nilai optimum tetap
-              dihitung manual — aplikasi ini tidak menghitungnya.
+              dihitung manual, tidak dihitung aplikasi.
             </div>
           )}
 
@@ -817,7 +817,7 @@ export default function LabGrafik({
               <p className="muted mt-2">Data wawancara belum tersedia.</p>
             )}
             <p className="muted mt-3">
-              Ringkasan ini hanya data mentah sebagai rujukan. Model pertidaksamaan tidak diisi otomatis — kamu
+              Ringkasan ini hanya data mentah sebagai rujukan. Model pertidaksamaan tidak diisi otomatis, kamu
               yang menuliskannya untuk memeriksa gambar.
             </p>
             {checklist?.title && <p className="muted mt-2">{checklist.title}</p>}

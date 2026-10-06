@@ -14,7 +14,7 @@ import {
 import { sql } from "drizzle-orm";
 
 /**
- * POST /api/quiz — kuis kesiapan (TANPA batas kelulusan).
+ * POST /api/quiz, kuis kesiapan (TANPA batas kelulusan).
  *
  * Semua percobaan disimpan. Guru memakai skor (percobaan pertama atau
  * tertinggi, sesuai pengaturan) untuk menyusun kelompok heterogen.

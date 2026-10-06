@@ -26,7 +26,7 @@ function toInterviewData(interview: Awaited<ReturnType<typeof getInterview>>): I
   };
 }
 
-/** GET /api/inequality — status kesiapan + riwayat percobaan terakhir. */
+/** GET /api/inequality, status kesiapan + riwayat percobaan terakhir. */
 export const GET = route(async () => {
   const context = await requireGroupMember();
   const interview = await getInterview(context.group.id);
@@ -63,7 +63,7 @@ export const GET = route(async () => {
 });
 
 /**
- * POST /api/inequality — periksa jawaban sistem pertidaksamaan kelompok.
+ * POST /api/inequality, periksa jawaban sistem pertidaksamaan kelompok.
  *
  * - Kunci jawaban dibangun dari data wawancara kelompok.
  * - Petunjuk bertahap; tidak mengembalikan "hadiah grafik" (siswa membuka Lab

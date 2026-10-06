@@ -6,7 +6,7 @@ import { requireTeacher } from "@/lib/auth";
 import { badRequest, notFound, readJson, route } from "@/lib/http";
 import { asNumber, asString } from "@/lib/validation";
 
-/** PATCH /api/teacher/planning — catatan/umpan balik guru pada planning sheet kelompok. */
+/** PATCH /api/teacher/planning, catatan/umpan balik guru pada planning sheet kelompok. */
 export const PATCH = route(async (request) => {
   await requireTeacher();
   const body = await readJson(request);

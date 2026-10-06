@@ -213,7 +213,7 @@ export default function JournalForm({
                   </button>
                 </div>
               )}
-              {!entry.isMine && <p className="muted mt-2">Entri anggota lain — hanya dapat dibaca.</p>}
+              {!entry.isMine && <p className="muted mt-2">Entri anggota lain, hanya dapat dibaca.</p>}
             </li>
           ))}
         </ul>
