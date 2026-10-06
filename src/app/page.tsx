@@ -91,7 +91,7 @@ export default async function HomePage() {
           <div className="card-tight">
             <h3 className="font-display text-lg text-ember-300">1. Memahami</h3>
             <p className="mt-1 text-sm">
-              Menonton cerita D&apos;Culinary, membaca modul (model matematika, grafik DHP, titik pojok), mencoba
+              Membaca cerita D&apos;Culinary tiga babak, mempelajari modul (model matematika, grafik DHP, titik pojok), mencoba
               Lab Grafik, lalu mengerjakan kuis kesiapan.
             </p>
           </div>
